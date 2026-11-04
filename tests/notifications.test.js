@@ -13,8 +13,8 @@ function fixture(send = async () => {}) {
     set: async (key, value) => { if (values.has(key)) return null; values.set(key, value); return 'OK'; },
     del: async key => values.delete(key)
   };
-  const handlers = createHandlers({ redis, send, env: { APP_ACCESS_TOKEN: 'personal', CRON_SECRET: 'scheduler', VAPID_PUBLIC_KEY: 'public', VAPID_PRIVATE_KEY: 'private', VAPID_SUBJECT: 'mailto:test@example.com' }, now: () => new Date('2026-11-04T09:00:00Z') });
-  async function call(name, body, token = name === 'cron' ? 'scheduler' : 'personal', method = 'POST') {
+  const handlers = createHandlers({ redis, send, env: { CRON_SECRET: 'scheduler', VAPID_PUBLIC_KEY: 'public', VAPID_PRIVATE_KEY: 'private', VAPID_SUBJECT: 'mailto:test@example.com' }, now: () => new Date('2026-11-04T09:00:00Z') });
+  async function call(name, body, token = name === 'cron' ? 'scheduler' : '', method = 'POST') {
     const res = { headers: {}, setHeader(k,v) { this.headers[k]=v; }, status(s) { this.code=s; return this; }, json(data) { this.data=data; return this; } };
     await handlers[name]({ method, body, headers: { authorization: `Bearer ${token}` } }, res);
     return res;
@@ -24,7 +24,7 @@ function fixture(send = async () => {}) {
 }
 test('authentication and HTTP methods are enforced', async () => {
   const f=fixture();
-  assert.equal((await f.call('push',{action:'config'},'bad')).code,401);
+  assert.equal((await f.call('push',{action:'config'},'')).code,200);
   assert.equal((await f.call('cron',{},'personal')).code,401);
   assert.equal((await f.call('push',{},'personal','GET')).code,405);
   assert.equal((await f.call('push',{action:'config'})).data.publicKey,'public');
@@ -69,4 +69,21 @@ test('sync replaces reminders and an empty schedule stops future reminders',asyn
   const sent=[],f=fixture(async(s,p)=>sent.push(p));await f.sync();
   await f.call('push',{action:'sync',subscription,habits:[],timezone:'Europe/Paris'});
   assert.equal((await f.call('cron',{})).data.sent,0);assert.equal(sent.length,0);
+});
+
+test('another subscription cannot change, test or disable an existing device',async()=>{
+  const sent=[],f=fixture(async(s,p)=>sent.push(p));await f.sync();
+  const forged={...subscription,keys:{...subscription.keys,auth:Buffer.alloc(16,3).toString('base64url')}};
+  for(const action of ['sync','test','disable']) {
+    const result=await f.call('push',{action,subscription:forged,habits:[],timezone:'Europe/Paris'});
+    assert.equal(result.code,403);
+  }
+  assert.equal(Object.keys(f.hash).length,1);
+  assert.equal((await f.call('cron',{})).data.sent,1);
+});
+test('registration and updates work without a personal token, including existing subscriptions',async()=>{
+  const f=fixture();assert.equal((await f.sync()).code,200);
+  assert.equal((await f.call('push',{action:'sync',subscription,habits:[],timezone:'Europe/Paris'},'')).code,200);
+  assert.equal((await f.call('push',{action:'test',subscription},'')).code,200);
+  assert.equal((await f.call('push',{action:'disable',subscription},'')).code,200);
 });

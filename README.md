@@ -30,7 +30,7 @@ Avant toute modification importante, exporter les données depuis les réglages 
 
 ## Configurer les notifications dans Vercel
 
-Cette configuration est destinée à une application personnelle : le même code donne accès aux abonnements de cette installation. Ce n'est pas un système de comptes utilisateurs.
+Cette configuration est destinée à une application personnelle. Aucun code personnel n’est demandé : le navigateur utilise automatiquement son abonnement pour gérer ses propres rappels. Le site permet les inscriptions aux notifications à ses visiteurs (20 appareils maximum) ; ce n’est pas un système de comptes utilisateurs.
 
 Installer les dépendances avec Node.js 24 et `npm ci`. Générer une paire VAPID avec `npm run vapid:generate` sur une machine de confiance. Conserver la même paire ensuite : changer les clés nécessite de réabonner les appareils. Ne pas partager ni committer les valeurs secrètes.
 
@@ -43,7 +43,6 @@ Dans Vercel → Settings → Environment Variables, ajouter pour **Production** 
 | `VAPID_PUBLIC_KEY` | `Public Key` de la commande de génération |
 | `VAPID_PRIVATE_KEY` | `Private Key` de la même commande, à garder secrète |
 | `VAPID_SUBJECT` | `mailto:` suivi de ton adresse de contact réelle |
-| `APP_ACCESS_TOKEN` | Code aléatoire privé d'au moins 32 caractères, à saisir ensuite dans les réglages de l'app |
 | `CRON_SECRET` | Autre secret aléatoire d'au moins 32 caractères, réservé au planificateur |
 
 Redéployer après modification des variables. `public` reste le répertoire de sortie ; Vercel déploie aussi les fonctions du dossier racine `api`. Le serveur local `npm run dev` sert uniquement les fichiers statiques, pas les fonctions Vercel.
@@ -65,12 +64,14 @@ L'endpoint répond avec les nombres `sent` et `failed`. Sans rappel dû, `{"sent
 ### Activer et vérifier sur le téléphone
 
 1. Sur iPhone (iOS 16.4 minimum), installer le site avec Safari → Partager → Sur l'écran d'accueil, puis ouvrir son icône.
-2. Dans Réglages, saisir la valeur de `APP_ACCESS_TOKEN`, cliquer sur Activer les notifications et accepter l'autorisation.
+2. Dans Réglages, cliquer sur Activer les notifications et accepter l’autorisation, sans saisir de code.
 3. Cliquer sur Tester : une notification doit arriver sur cet appareil. Attendre 30 secondes entre deux tests.
 4. Créer une habitude prévue aujourd'hui avec un rappel quelques minutes plus tard, puis vérifier l'exécution du planificateur et la réception avec l'application fermée.
 
-Le code reste uniquement en mémoire de session du navigateur. Après une fermeture complète, le ressaisir dans Réglages pour synchroniser les modifications et les validations du jour. Les rappels déjà synchronisés continuent côté serveur sans laisser l'application ouverte. Seuls les noms, jours, heures et dates de validation du jour sont transmis ; les notes et l'historique restent locaux. Chaque appareil a son propre planning ; les données ne sont pas synchronisées entre appareils. Désactiver supprime l'abonnement de l'appareil courant dans Redis. Maximum : 20 appareils.
+Les modifications et les validations du jour se synchronisent lorsque l’application est ouverte et connectée, y compris après réouverture. Les rappels déjà synchronisés continuent côté serveur sans laisser l'application ouverte. Seuls les noms, jours, heures et dates de validation du jour sont transmis ; les notes et l'historique restent locaux. Chaque appareil a son propre planning ; les données ne sont pas synchronisées entre appareils. Désactiver supprime l'abonnement de l'appareil courant dans Redis. Maximum : 20 appareils.
 
 ## Vérifications de développement
 
 `npm run check` contrôle la syntaxe. `npm test` exécute les tests du serveur avec Redis et l'envoi push simulés : accès, validation, fuseaux horaires, dédoublonnage, expiration, reprises et désactivation. Ces tests ne remplacent pas un essai avec les identifiants réels en production.
+
+La variable Vercel `APP_ACCESS_TOKEN` des anciennes versions n’est plus utilisée et peut être supprimée. `CRON_SECRET` reste nécessaire uniquement pour protéger le planificateur.

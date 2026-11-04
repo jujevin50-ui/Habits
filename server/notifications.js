@@ -48,8 +48,6 @@ export function createHandlers({ redis, send, env, now = () => new Date() }) {
   async function push(req, res) {
     res.setHeader('Cache-Control', 'no-store');
     if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return res.status(405).json({ error: 'Méthode non autorisée.' }); }
-    if (!env.APP_ACCESS_TOKEN) return res.status(503).json({ error: 'APP_ACCESS_TOKEN manque dans Vercel.' });
-    if (!authorized(req.headers.authorization, env.APP_ACCESS_TOKEN)) return res.status(401).json({ error: 'Code personnel incorrect.' });
     try {
       let body;
       try { body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body; } catch { throw fail('JSON invalide.'); }
@@ -60,14 +58,17 @@ export function createHandlers({ redis, send, env, now = () => new Date() }) {
       }
       if (!['sync', 'test', 'disable'].includes(body.action)) throw fail('Action inconnue.');
       const subscription = validateSubscription(body.subscription), id = subscriptionId(subscription);
+      const device = await redis.hget(STORE, id);
+      // The browser supplies its own private subscription material automatically.
+      // Knowing another device's endpoint alone must not grant access to it.
+      if (device && (!authorized(`Bearer ${subscription.keys.auth}`, device.subscription.keys.auth) || !authorized(`Bearer ${subscription.keys.p256dh}`, device.subscription.keys.p256dh))) throw fail('Abonnement non autorisé.', 403);
       if (body.action === 'disable') { await redis.hdel(STORE, id); return res.status(200).json({ ok: true }); }
       if (body.action === 'sync') {
         const schedule = validateSchedule(body);
-        if (!await redis.hget(STORE, id) && await redis.hlen(STORE) >= 20) throw fail('Limite de 20 appareils atteinte.', 409);
+        if (!device && await redis.hlen(STORE) >= 20) throw fail('Limite de 20 appareils atteinte.', 409);
         await redis.hset(STORE, { [id]: { subscription, ...schedule } });
         return res.status(200).json({ ok: true });
       }
-      const device = await redis.hget(STORE, id);
       if (!device) throw fail('Active les notifications sur cet appareil avant de tester.', 404);
       const rateKey = `habits:test:${id}`;
       if (!await redis.set(rateKey, '1', { nx: true, ex: 30 })) throw fail('Attends 30 secondes avant un autre test.', 429);
