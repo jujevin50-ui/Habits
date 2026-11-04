@@ -119,3 +119,13 @@ test('closed phones use the current shared task data, including remote completio
   f.values.set(key,{folders:[{id:'work',name:'Travail',parentId:null}],tasks:[{...task,done:false}]});
   assert.equal((await f.call('cron',{})).data.sent,1);assert.equal(sent[0].body,'Travail');
 });
+
+test('shared habit validation and archiving suppress reminders on a closed phone',async()=>{
+  const sent=[],f=fixture(async(s,p)=>sent.push(JSON.parse(p)));
+  await f.call('push',{action:'sync',subscription,habits:[habit],tasks:[],taskToken:'a'.repeat(64),timezone:'Europe/Paris'});
+  const key=`habits:tasks:${Object.values(f.hash)[0].taskWorkspace}`;
+  const shared={...habit,goal:1,logs:{'2026-11-04':{value:1,note:'Fait sur PC'}}};
+  f.values.set(key,{tasks:[],folders:[],habits:[shared]});assert.equal((await f.call('cron',{})).data.sent,0);
+  f.values.set(key,{tasks:[],folders:[],habits:[{...shared,logs:{},archived:true}]});assert.equal((await f.call('cron',{})).data.sent,0);
+  f.values.set(key,{tasks:[],folders:[],habits:[{...shared,logs:{}}]});assert.equal((await f.call('cron',{})).data.sent,1);
+});

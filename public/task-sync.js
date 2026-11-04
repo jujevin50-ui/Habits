@@ -5,6 +5,7 @@ const newToken=()=>Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.to
 export function createTaskSync({getState,onChange,onStatus}) {
   let config=null,inFlight=null,timer,status='Non associés';
   try { const saved=JSON.parse(localStorage.getItem(STORAGE));if(/^[a-f0-9]{64}$/.test(saved?.token)&&validTaskSnapshot(saved.base))config=saved; } catch {}
+  if(config&&!Array.isArray(config.base.habits)&&!localStorage.getItem('habits-before-full-sync'))localStorage.setItem('habits-before-full-sync',JSON.stringify(getState()));
   const setStatus=value=>{status=value;onStatus(value);};
   const persist=()=>{localStorage.setItem(STORAGE,JSON.stringify(config));};
   async function request(action,body={},token=config?.token||newToken()) {
@@ -20,7 +21,7 @@ export function createTaskSync({getState,onChange,onStatus}) {
     setStatus('Synchronisation…');
     inFlight=(async()=>{
       try {
-        const remote=await request('sync',{changes:taskChanges(currentConfig.base,before)},currentConfig.token);
+        const remote=await request('sync',{changes:taskChanges(currentConfig.base,before),includeHabits:true},currentConfig.token);
         if(config!==currentConfig)return;
         if(!validTaskSnapshot(remote))throw Error('Réponse de synchronisation invalide.');
         const latest=taskSnapshot(getState()),pending=taskChanges(before,latest),merged=applyTaskChanges(remote,pending);

@@ -27,18 +27,19 @@ export function taskSyncHandler(redis) {
         return res.status(200).json({token:shared});
       }
       if(body.action!=='sync'||!Array.isArray(body.changes)||body.changes.length>11000) throw bad('Synchronisation invalide.');
-      const allowed={tasks:new Set(['id','name','due','done','priority','repeat','series','subtasks','folderId','reminderAt']),folders:new Set(['id','name','parentId'])};
+      const allowed={tasks:new Set(['id','name','due','done','priority','repeat','series','subtasks','folderId','reminderAt']),folders:new Set(['id','name','parentId']),habits:new Set(['id','name','description','icon','color','category','type','goal','unit','days','reminders','created','logs','archived'])};
       for(const op of body.changes) {
-        if(!op || !['tasks','folders'].includes(op.collection) || !['create','patch','delete'].includes(op.action) || typeof op.id!=='string' || !op.id.length || op.id.length>100) throw bad('Modification invalide.');
+        if(!op || !['tasks','folders','habits'].includes(op.collection) || !['create','patch','delete'].includes(op.action) || typeof op.id!=='string' || !op.id.length || op.id.length>100) throw bad('Modification invalide.');
         if(op.action!=='delete' && (!op.fields || Array.isArray(op.fields) || typeof op.fields!=='object' || Object.keys(op.fields).some(k=>!allowed[op.collection].has(k)))) throw bad('Champs invalides.');
+        if(op.logs && (op.collection!=='habits'||op.action!=='patch'||typeof op.logs!=='object'||Array.isArray(op.logs)||Object.entries(op.logs).some(([day,log])=>!/^\d{4}-\d{2}-\d{2}$/.test(day)||(log!==null&&(!log||!Number.isFinite(log.value)||log.value<0||typeof log.note!=='string'||log.note.length>2000)))))throw bad('Historique invalide.');
         if(op.unset && (!Array.isArray(op.unset)||op.unset.some(k=>!allowed[op.collection].has(k)||k==='id'))) throw bad('Champs invalides.');
       }
       const key=`habits:tasks:${hash(token)}`;
       for(let retry=0;retry<5;retry++) {
         const previous=await redis.get(key)||{revision:0,tasks:[],folders:[]};
-        if(!body.changes.length) return res.status(200).json(previous);
+        if(!body.changes.length) return res.status(200).json(body.includeHabits?{...previous,habits:previous.habits||[]}:previous);
         const next={...applyTaskChanges(previous,body.changes),revision:previous.revision+1};
-        if(!validTaskSnapshot(next) || Buffer.byteLength(JSON.stringify(next))>2000000) throw bad('Données de tâches invalides ou conflit de dossiers.');
+        if(!validTaskSnapshot(next) || Buffer.byteLength(JSON.stringify(next))>2000000) throw bad('Données invalides ou conflit de dossiers.');
         if(await redis.eval(compareAndSet,[key],[String(previous.revision),JSON.stringify(next)])) return res.status(200).json(next);
       }
       return res.status(409).json({error:'Modification simultanée. Réessaie dans quelques secondes.'});

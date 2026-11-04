@@ -40,7 +40,7 @@ export function dueReminders(device, now) {
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: device.timezone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now).map(p => [p.type, p.value]));
   const date = `${parts.year}-${parts.month}-${parts.day}`, time = `${parts.hour}:${parts.minute}`;
   const day = new Date(`${date}T12:00:00Z`).getUTCDay();
-  return device.habits.filter(h => h.days.includes(day) && h.reminders.includes(time) && h.completedToday !== date).map(h => ({ title: 'Habits', body: h.name, tag: `habit-${h.id}`, event: `${date}:${time}:${h.id}` }));
+  return device.habits.filter(h => !h.archived && (!h.created||date>=h.created) && h.days.includes(day) && h.reminders.includes(time) && h.completedToday !== date && (!h.logs||(h.logs[date]?.value||0)<h.goal)).map(h => ({ title: 'Habits', body: h.name, tag: `habit-${h.id}`, event: `${date}:${time}:${h.id}` }));
 }
 
 export function dueTaskReminders(tasks, now, folders) {
@@ -99,13 +99,13 @@ export function createHandlers({ redis, send, env, now = () => new Date() }) {
     try {
       const devices = await redis.hgetall(STORE) || {}, date = now(), workspaces = new Map();
       for (const [id, device] of Object.entries(devices)) {
-        let tasks = device.tasks || [], folders;
+        let tasks = device.tasks || [], folders, habits=device.habits||[];
         if (device.taskWorkspace) {
           if (!workspaces.has(device.taskWorkspace)) workspaces.set(device.taskWorkspace, await redis.get(`habits:tasks:${device.taskWorkspace}`));
           const shared = workspaces.get(device.taskWorkspace);
-          if (shared) { tasks = shared.tasks; folders = shared.folders; }
+          if (shared) { tasks = shared.tasks; folders = shared.folders;if(Array.isArray(shared.habits))habits=shared.habits; }
         }
-        for (const reminder of [...dueReminders(device, date), ...dueTaskReminders(tasks, date, folders)]) {
+        for (const reminder of [...dueReminders({...device,habits}, date), ...dueTaskReminders(tasks, date, folders)]) {
           const lock = `habits:sent:${id}:${createHash('sha256').update(reminder.event).digest('hex')}`;
           if (!await redis.set(lock, '1', { nx: true, ex: 172800 })) continue;
           try {

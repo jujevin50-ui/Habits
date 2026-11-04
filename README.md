@@ -14,18 +14,18 @@ Pour les appareils associés, le planificateur lit les tâches partagées direct
 
 Pour corriger une habitude à une date précise, toucher son nom ou une case de la grille, choisir **Jour**, modifier la valeur ou la note et enregistrer. Les autres journées restent inchangées. Le sélecteur accepte les dates à partir de 2000, y compris avant la création de l’habitude. Enregistrer une date antérieure étend le début de son historique, sans effacer les autres jours. Les dates futures peuvent aussi être renseignées depuis ce sélecteur. Modifier l’habitude elle-même reste une action distincte.
 
-## Synchroniser les tâches entre PC et téléphone
+## Synchroniser les habitudes et tâches entre PC et téléphone
 
 Les deux appareils doivent ouvrir le même domaine de production Vercel.
 
 1. Sur le premier appareil : Réglages → Appareils → Associer un appareil.
 2. Sur le second : Réglages → Appareils → Saisir un code, puis entrer le code affiché sur le premier.
 
-Le code est utilisable une seule fois pendant dix minutes. L’association est conservée dans le navigateur : aucun mot de passe quotidien ni variable Vercel supplémentaire n’est nécessaire. La fonction `api/tasks.js` utilise les mêmes variables Upstash REST que les notifications. Les dossiers, les tâches, leurs sous-tâches et les validations sont stockés dans Redis pour cet espace associé. Les habitudes et les préférences d’affichage restent gérées séparément sur l’appareil.
+Le code est utilisable une seule fois pendant dix minutes. L’association est conservée dans le navigateur : aucun mot de passe quotidien ni variable Vercel supplémentaire n’est nécessaire. La fonction `api/tasks.js` utilise les mêmes variables Upstash REST que les notifications. Les habitudes, leurs historiques et notes, les dossiers et les tâches sont stockés dans Redis pour cet espace associé. Les préférences d’affichage restent propres à chaque appareil. Les appareils déjà associés pour les tâches conservent leur liaison et transmettent aussi leurs habitudes après ouverture de cette version. Une copie locale avant cette migration est conservée dans `habits-before-full-sync`.
 
-Les tâches existantes des deux appareils sont réunies par identifiant. Pour un identifiant déjà présent dans l’espace partagé, la version distante est conservée lors de la première association ; une copie des données locales avant association est conservée dans le navigateur (`habits-tasks-before-link`). Exporter une sauvegarde avant de relier des appareils ayant des copies divergentes d’une même tâche.
+Les habitudes et tâches existantes des deux appareils sont réunies par identifiant. Pour une habitude déjà partagée, les dates présentes dans un seul historique sont conservées ; les valeurs distantes sont conservées pour les journées déjà présentes lors de la première association. Pour un identifiant déjà présent dans l’espace partagé, la version distante est conservée lors de la première association ; une copie des données locales avant association est conservée dans le navigateur (`habits-tasks-before-link`). Exporter une sauvegarde avant de relier des appareils ayant des copies divergentes d’une même tâche.
 
-Les changements sont envoyés après enregistrement. L’app récupère les mises à jour à son ouverture, au retour de la connexion et toutes les quinze secondes lorsqu’elle est visible. Les modifications hors ligne sont conservées et envoyées ensuite. Les modifications de champs différents sont fusionnées ; pour le même champ, le dernier envoi accepté l’emporte. Une tâche supprimée n’est pas recréée par la mise à jour d’un appareil resté hors ligne. Les exports JSON contiennent les tâches et dossiers, pas l’identifiant secret d’association. « Dissocier cet appareil » garde sa copie locale et arrête ses échanges.
+Les changements sont envoyés après enregistrement. L’app récupère les mises à jour à son ouverture, au retour de la connexion et toutes les quinze secondes lorsqu’elle est visible. Les modifications hors ligne sont conservées et envoyées ensuite. Les modifications de champs différents sont fusionnées ; les historiques des habitudes sont fusionnés par journée, pour préserver des corrections faites sur des dates différentes. Pour le même champ ou la même journée, le dernier envoi accepté l’emporte. Une tâche supprimée n’est pas recréée par la mise à jour d’un appareil resté hors ligne. Les exports JSON contiennent les habitudes, tâches et dossiers, pas l’identifiant secret d’association. « Dissocier cet appareil » garde sa copie locale et arrête ses échanges.
 
 ## Lancer localement
 
@@ -43,7 +43,7 @@ Importer le dépôt GitHub dans Vercel. Choisir le preset « Other », sans comm
 
 ## État de cette version
 
-Le code comprend la gestion locale des habitudes et des tâches, les grilles, les statistiques, les archives et l'export/import JSON. Les données restent disponibles dans le navigateur. Les tâches et dossiers peuvent aussi être synchronisés via Redis entre les appareils associés ; les habitudes et leurs historiques restent locaux. Il n’y a pas de compte utilisateur. Un dépôt privé ne rend pas automatiquement le site Vercel privé.
+Le code comprend la gestion locale des habitudes et des tâches, les grilles, les statistiques, les archives et l'export/import JSON. Les données restent disponibles dans le navigateur. Les tâches et dossiers peuvent aussi être synchronisés via Redis entre les appareils associés ; les habitudes et leurs historiques sont aussi synchronisés entre les appareils associés. Il n’y a pas de compte utilisateur. Un dépôt privé ne rend pas automatiquement le site Vercel privé.
 
 Cette version est un prototype, pas une version finale testée sur iPhone.
 
@@ -93,7 +93,7 @@ L'endpoint répond avec les nombres `sent` et `failed`. Sans rappel dû, `{"sent
 3. Cliquer sur Tester : une notification doit arriver sur cet appareil. Attendre 30 secondes entre deux tests.
 4. Créer une habitude prévue aujourd'hui avec un rappel quelques minutes plus tard, puis vérifier l'exécution du planificateur et la réception avec l'application fermée.
 
-Les modifications et les validations du jour se synchronisent lorsque l’application est ouverte et connectée, y compris après réouverture. Les rappels déjà synchronisés continuent côté serveur sans laisser l'application ouverte. Seuls les noms, jours, heures et dates de validation du jour sont transmis ; les notes et l'historique restent locaux. Chaque appareil a son propre planning de rappels d’habitudes. La synchronisation des tâches est indépendante des notifications. Désactiver supprime l'abonnement de l'appareil courant dans Redis. Maximum : 20 appareils.
+Les modifications et les validations du jour se synchronisent lorsque l’application est ouverte et connectée, y compris après réouverture. Les rappels déjà synchronisés continuent côté serveur sans laisser l'application ouverte. Le planning de notifications utilise les noms, jours, heures et validations. Sur les appareils associés, les habitudes complètes, leurs notes et leurs historiques sont aussi enregistrés dans l’espace de synchronisation Redis. Chaque appareil a son propre planning de rappels d’habitudes. Le serveur consulte aussi les habitudes partagées pour tenir compte des validations et archives faites depuis un autre appareil. Désactiver supprime l'abonnement de l'appareil courant dans Redis. Maximum : 20 appareils.
 
 ## Vérifications de développement
 
