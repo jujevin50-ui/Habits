@@ -13,3 +13,5 @@ aside nav{margin-top:36px}.task-header-actions{display:flex;gap:9px;align-items:
 @media(max-width:650px){aside nav{margin-top:0}.task-view-switch{max-width:none;margin-top:22px}.task-header-actions .icon-action{width:40px;height:40px}.folder-tabs{margin-bottom:6px}.folder-heading{gap:6px;margin-top:3px;margin-bottom:12px}.folder-title{gap:6px}.folder-title h2{font-size:14px}.folder-title>svg{width:17px;height:17px}.folder-navigation{gap:0}.folder-navigation button{width:27px}.task{padding:15px 13px}.task-name{font-size:14px}.task-empty{padding:30px 14px}}
 
 .agenda-date.overdue{color:#f28a9d}
+
+.pair-code{display:block;font:600 24px ui-monospace,SFMono-Regular,monospace;letter-spacing:2px;word-spacing:5px;text-align:center;color:var(--accent);padding:24px 10px;user-select:all;overflow-wrap:anywhere}.sync-disconnect{font-size:11px;color:var(--muted);margin-top:18px;padding:0}#task-sync-status{font-size:12px}

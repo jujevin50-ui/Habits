@@ -6,6 +6,19 @@ Prototype de PWA personnelle pour les habitudes et les tâches, en français.
 
 Deux vues : dossiers (avec sous-dossiers et balayage horizontal) et échéances (toutes les tâches triées, avec leur dossier indiqué). Les tâches sans date viennent en dernier ; les tâches terminées sont repliées. Le choix de vue et les dossiers sont conservés sur l’appareil et inclus dans les exports JSON. Les anciennes tâches apparaissent dans « Sans dossier ». Supprimer un dossier déplace ses tâches et ses sous-dossiers vers son parent, sans les supprimer.
 
+## Synchroniser les tâches entre PC et téléphone
+
+Les deux appareils doivent ouvrir le même domaine de production Vercel.
+
+1. Sur le premier appareil : Réglages → Appareils → Associer un appareil.
+2. Sur le second : Réglages → Appareils → Saisir un code, puis entrer le code affiché sur le premier.
+
+Le code est utilisable une seule fois pendant dix minutes. L’association est conservée dans le navigateur : aucun mot de passe quotidien ni variable Vercel supplémentaire n’est nécessaire. La fonction `api/tasks.js` utilise les mêmes variables Upstash REST que les notifications. Les dossiers, les tâches, leurs sous-tâches et les validations sont stockés dans Redis pour cet espace associé. Les habitudes et les préférences d’affichage restent gérées séparément sur l’appareil.
+
+Les tâches existantes des deux appareils sont réunies par identifiant. Pour un identifiant déjà présent dans l’espace partagé, la version distante est conservée lors de la première association ; une copie des données locales avant association est conservée dans le navigateur (`habits-tasks-before-link`). Exporter une sauvegarde avant de relier des appareils ayant des copies divergentes d’une même tâche.
+
+Les changements sont envoyés après enregistrement. L’app récupère les mises à jour à son ouverture, au retour de la connexion et toutes les quinze secondes lorsqu’elle est visible. Les modifications hors ligne sont conservées et envoyées ensuite. Les modifications de champs différents sont fusionnées ; pour le même champ, le dernier envoi accepté l’emporte. Une tâche supprimée n’est pas recréée par la mise à jour d’un appareil resté hors ligne. Les exports JSON contiennent les tâches et dossiers, pas l’identifiant secret d’association. « Dissocier cet appareil » garde sa copie locale et arrête ses échanges.
+
 ## Lancer localement
 
 Avec Node.js installé :
@@ -22,7 +35,7 @@ Importer le dépôt GitHub dans Vercel. Choisir le preset « Other », sans comm
 
 ## État de cette version
 
-Le code comprend la gestion locale des habitudes et des tâches, les grilles, les statistiques, les archives et l'export/import JSON. Les données sont enregistrées dans le navigateur ; aucune synchronisation cloud ni authentification n'est implémentée. Un dépôt privé ne rend pas automatiquement le site Vercel privé.
+Le code comprend la gestion locale des habitudes et des tâches, les grilles, les statistiques, les archives et l'export/import JSON. Les données restent disponibles dans le navigateur. Les tâches et dossiers peuvent aussi être synchronisés via Redis entre les appareils associés ; les habitudes et leurs historiques restent locaux. Il n’y a pas de compte utilisateur. Un dépôt privé ne rend pas automatiquement le site Vercel privé.
 
 Cette version est un prototype, pas une version finale testée sur iPhone.
 
@@ -72,10 +85,10 @@ L'endpoint répond avec les nombres `sent` et `failed`. Sans rappel dû, `{"sent
 3. Cliquer sur Tester : une notification doit arriver sur cet appareil. Attendre 30 secondes entre deux tests.
 4. Créer une habitude prévue aujourd'hui avec un rappel quelques minutes plus tard, puis vérifier l'exécution du planificateur et la réception avec l'application fermée.
 
-Les modifications et les validations du jour se synchronisent lorsque l’application est ouverte et connectée, y compris après réouverture. Les rappels déjà synchronisés continuent côté serveur sans laisser l'application ouverte. Seuls les noms, jours, heures et dates de validation du jour sont transmis ; les notes et l'historique restent locaux. Chaque appareil a son propre planning ; les données ne sont pas synchronisées entre appareils. Désactiver supprime l'abonnement de l'appareil courant dans Redis. Maximum : 20 appareils.
+Les modifications et les validations du jour se synchronisent lorsque l’application est ouverte et connectée, y compris après réouverture. Les rappels déjà synchronisés continuent côté serveur sans laisser l'application ouverte. Seuls les noms, jours, heures et dates de validation du jour sont transmis ; les notes et l'historique restent locaux. Chaque appareil a son propre planning de rappels d’habitudes. La synchronisation des tâches est indépendante des notifications. Désactiver supprime l'abonnement de l'appareil courant dans Redis. Maximum : 20 appareils.
 
 ## Vérifications de développement
 
-`npm run check` contrôle la syntaxe. `npm test` exécute les tests du serveur avec Redis et l'envoi push simulés : accès, validation, fuseaux horaires, dédoublonnage, expiration, reprises et désactivation. Ces tests ne remplacent pas un essai avec les identifiants réels en production.
+`npm run check` contrôle la syntaxe. `npm test` exécute les tests du serveur avec Redis et l'envoi push simulés : accès, validation, fuseaux horaires, dédoublonnage, expiration, reprises et désactivation. Les tests de synchronisation couvrent aussi l’association, l’isolation des espaces, la fusion de modifications et les suppressions hors ligne avec Redis simulé. Ces tests ne remplacent pas un essai avec les identifiants réels en production.
 
 La variable Vercel `APP_ACCESS_TOKEN` des anciennes versions n’est plus utilisée et peut être supprimée. `CRON_SECRET` reste nécessaire uniquement pour protéger le planificateur.
