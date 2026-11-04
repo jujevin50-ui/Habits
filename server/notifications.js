@@ -1,6 +1,8 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { validReminderAt } from '../public/task-reminders.js';
 import { folderPath } from '../public/tasks.js';
+import { quoteSettings, validQuoteSettings } from '../public/quotes-settings.js';
+import { dueQuotes } from './quotes.js';
 
 const STORE = 'habits:devices:v1';
 const fail = (message, status = 400) => Object.assign(new Error(message), { status });
@@ -34,7 +36,8 @@ export function validateSchedule(body) {
   if (!Array.isArray(tasks) || tasks.length > 5000 || !tasks.every(t => t && typeof t.id === 'string' && t.id.length > 0 && t.id.length <= 100 && typeof t.name === 'string' && t.name.length > 0 && t.name.length <= 150 && typeof t.done === 'boolean' && validReminderAt(t.reminderAt) && (t.folderLabel == null || (typeof t.folderLabel === 'string' && t.folderLabel.length <= 200)))) throw fail('Rappel de tâche invalide.');
   if (body.taskToken != null && !/^[a-f0-9]{64}$/.test(body.taskToken)) throw fail('Association de tâches invalide.');
   const taskWorkspace = body.taskToken ? createHash('sha256').update(body.taskToken).digest('hex') : null;
-  return { habits, timezone: body.timezone, tasks: tasks.map(t=>({id:t.id,name:t.name,done:t.done,reminderAt:t.reminderAt||'',folderLabel:t.folderLabel||''})), taskWorkspace };
+  if(body.quotes!==undefined&&!validQuoteSettings(body.quotes))throw fail('Choisis trois horaires de citations différents et valides.');
+  return { habits, timezone: body.timezone, tasks: tasks.map(t=>({id:t.id,name:t.name,done:t.done,reminderAt:t.reminderAt||'',folderLabel:t.folderLabel||''})), taskWorkspace, quotes:quoteSettings(body.quotes) };
 }
 export function dueReminders(device, now) {
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: device.timezone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now).map(p => [p.type, p.value]));
@@ -79,6 +82,7 @@ export function createHandlers({ redis, send, env, now = () => new Date() }) {
       if (body.action === 'disable') { await redis.hdel(STORE, id); return res.status(200).json({ ok: true }); }
       if (body.action === 'sync') {
         const schedule = validateSchedule(body);
+        if(body.quotes===undefined&&device?.quotes)schedule.quotes=device.quotes;
         if (!device && await redis.hlen(STORE) >= 20) throw fail('Limite de 20 appareils atteinte.', 409);
         await redis.hset(STORE, { [id]: { subscription, ...schedule } });
         return res.status(200).json({ ok: true });
@@ -105,7 +109,7 @@ export function createHandlers({ redis, send, env, now = () => new Date() }) {
           const shared = workspaces.get(device.taskWorkspace);
           if (shared) { tasks = shared.tasks; folders = shared.folders;if(Array.isArray(shared.habits))habits=shared.habits; }
         }
-        for (const reminder of [...dueReminders({...device,habits}, date), ...dueTaskReminders(tasks, date, folders)]) {
+        for (const reminder of [...dueReminders({...device,habits}, date), ...dueTaskReminders(tasks, date, folders), ...dueQuotes(device,date)]) {
           const lock = `habits:sent:${id}:${createHash('sha256').update(reminder.event).digest('hex')}`;
           if (!await redis.set(lock, '1', { nx: true, ex: 172800 })) continue;
           try {

@@ -6,6 +6,16 @@ Prototype de PWA personnelle pour les habitudes et les tâches, en français.
 
 Deux vues : dossiers (avec sous-dossiers et balayage horizontal) et échéances (toutes les tâches triées, avec leur dossier indiqué). Les tâches sans date viennent en dernier ; les tâches terminées sont repliées. Le choix de vue et les dossiers sont conservés sur l’appareil et inclus dans les exports JSON. Les anciennes tâches apparaissent dans « Sans dossier ». Supprimer un dossier déplace ses tâches et ses sous-dossiers vers son parent, sans les supprimer.
 
+## Quotes : trois citations par jour
+
+Dans Réglages → **Quotes**, activer l’interrupteur sur l’appareil destinataire. Si nécessaire, l’app demande l’autorisation de notifications. Les horaires par défaut sont **08:00, 13:00 et 21:00**, dans le fuseau horaire de l’appareil. Modifier les trois champs puis cliquer sur **Enregistrer les horaires** ; les heures doivent être différentes. Les réglages restent propres à cet appareil, comme son abonnement aux notifications.
+
+La bibliothèque de `server/quote-library.js` contient **360 textes courts distincts** : 340 phrases originales, sans attribution inventée, et 20 citations classiques avec auteur et source. Elle couvre l’action, le travail, la discipline, l’avenir, la réalité, le courage, l’apprentissage, l’attention, le temps, l’équilibre et l’humanité. Les 40 phrases du thème Humanité abordent notamment la dignité, les relations, la justice, la solidarité et les contradictions humaines. Les textes originaux ne sont pas présentés comme des citations de philosophes.
+
+Trois textes différents sont sélectionnés chaque jour, avec une rotation complète de 120 jours avant répétition. L’envoi utilise le `/api/cron` déjà configuré chaque minute : aucune nouvelle variable Vercel, clé ou tâche planifiée n’est nécessaire. Les citations fonctionnent avec l’application fermée, une fois l’activation enregistrée sur le serveur. Un retard du planificateur de moins de cinq minutes est rattrapé, y compris après minuit. Les exécutions simultanées et les changements d’horaires ne renvoient pas un créneau déjà reçu : trois créneaux au maximum par jour local et par appareil.
+
+Désactiver Quotes supprime ses envois sans désactiver les rappels d’habitudes et de tâches. Désactiver toutes les notifications interrompt également les citations. La réception dépend de la connexion et du système du téléphone ; aucun envoi réel sur un appareil physique n’est validé par les tests locaux.
+
 ## Rappels des tâches et historique des habitudes
 
 Dans une tâche, renseigner le champ **Rappel** (date et heure), puis enregistrer. Effacer ce champ pour supprimer le rappel. Activer les notifications dans les réglages de chaque appareil destinataire. Le serveur utilise le même déclenchement `/api/cron` et les mêmes clés que les habitudes : aucun paramètre Vercel ni tâche cron supplémentaire à créer.
