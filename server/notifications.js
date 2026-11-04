@@ -1,4 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
+import { validReminderAt } from '../public/task-reminders.js';
+import { folderPath } from '../public/tasks.js';
 
 const STORE = 'habits:devices:v1';
 const fail = (message, status = 400) => Object.assign(new Error(message), { status });
@@ -28,13 +30,25 @@ export function validateSchedule(body) {
     return { id: h.id, name: h.name, days: [...new Set(h.days)], reminders: [...new Set(h.reminders)], completedToday: h.completedToday };
   });
   if (new Set(habits.map(h => h.id)).size !== habits.length) throw fail('Identifiants dupliqués.');
-  return { habits, timezone: body.timezone };
+  const tasks = body.tasks ?? [];
+  if (!Array.isArray(tasks) || tasks.length > 5000 || !tasks.every(t => t && typeof t.id === 'string' && t.id.length > 0 && t.id.length <= 100 && typeof t.name === 'string' && t.name.length > 0 && t.name.length <= 150 && typeof t.done === 'boolean' && validReminderAt(t.reminderAt) && (t.folderLabel == null || (typeof t.folderLabel === 'string' && t.folderLabel.length <= 200)))) throw fail('Rappel de tâche invalide.');
+  if (body.taskToken != null && !/^[a-f0-9]{64}$/.test(body.taskToken)) throw fail('Association de tâches invalide.');
+  const taskWorkspace = body.taskToken ? createHash('sha256').update(body.taskToken).digest('hex') : null;
+  return { habits, timezone: body.timezone, tasks: tasks.map(t=>({id:t.id,name:t.name,done:t.done,reminderAt:t.reminderAt||'',folderLabel:t.folderLabel||''})), taskWorkspace };
 }
 export function dueReminders(device, now) {
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: device.timezone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now).map(p => [p.type, p.value]));
   const date = `${parts.year}-${parts.month}-${parts.day}`, time = `${parts.hour}:${parts.minute}`;
   const day = new Date(`${date}T12:00:00Z`).getUTCDay();
   return device.habits.filter(h => h.days.includes(day) && h.reminders.includes(time) && h.completedToday !== date).map(h => ({ title: 'Habits', body: h.name, tag: `habit-${h.id}`, event: `${date}:${time}:${h.id}` }));
+}
+
+export function dueTaskReminders(tasks, now, folders) {
+  return tasks.filter(t => !t.done && t.reminderAt && validReminderAt(t.reminderAt) && now.getTime() >= Date.parse(t.reminderAt) && now.getTime()-Date.parse(t.reminderAt)<300000).map(t=>({
+    title:t.name,
+    body:folders ? (t.folderId ? folderPath(folders,t.folderId).slice(0,200) : 'Rappel de tâche') : (t.folderLabel || 'Rappel de tâche'),
+    tag:`task-${t.id}`, event:`task:${t.id}:${t.reminderAt}`, url:'/#tasks'
+  }));
 }
 
 export function createHandlers({ redis, send, env, now = () => new Date() }) {
@@ -83,9 +97,15 @@ export function createHandlers({ redis, send, env, now = () => new Date() }) {
     if (!authorized(req.headers.authorization, env.CRON_SECRET)) return res.status(401).json({ error: 'Non autorisé.' });
     let sent = 0, failed = 0;
     try {
-      const devices = await redis.hgetall(STORE) || {}, date = now();
+      const devices = await redis.hgetall(STORE) || {}, date = now(), workspaces = new Map();
       for (const [id, device] of Object.entries(devices)) {
-        for (const reminder of dueReminders(device, date)) {
+        let tasks = device.tasks || [], folders;
+        if (device.taskWorkspace) {
+          if (!workspaces.has(device.taskWorkspace)) workspaces.set(device.taskWorkspace, await redis.get(`habits:tasks:${device.taskWorkspace}`));
+          const shared = workspaces.get(device.taskWorkspace);
+          if (shared) { tasks = shared.tasks; folders = shared.folders; }
+        }
+        for (const reminder of [...dueReminders(device, date), ...dueTaskReminders(tasks, date, folders)]) {
           const lock = `habits:sent:${id}:${createHash('sha256').update(reminder.event).digest('hex')}`;
           if (!await redis.set(lock, '1', { nx: true, ex: 172800 })) continue;
           try {

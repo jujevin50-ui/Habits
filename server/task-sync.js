@@ -27,7 +27,7 @@ export function taskSyncHandler(redis) {
         return res.status(200).json({token:shared});
       }
       if(body.action!=='sync'||!Array.isArray(body.changes)||body.changes.length>11000) throw bad('Synchronisation invalide.');
-      const allowed={tasks:new Set(['id','name','due','done','priority','repeat','series','subtasks','folderId']),folders:new Set(['id','name','parentId'])};
+      const allowed={tasks:new Set(['id','name','due','done','priority','repeat','series','subtasks','folderId','reminderAt']),folders:new Set(['id','name','parentId'])};
       for(const op of body.changes) {
         if(!op || !['tasks','folders'].includes(op.collection) || !['create','patch','delete'].includes(op.action) || typeof op.id!=='string' || !op.id.length || op.id.length>100) throw bad('Modification invalide.');
         if(op.action!=='delete' && (!op.fields || Array.isArray(op.fields) || typeof op.fields!=='object' || Object.keys(op.fields).some(k=>!allowed[op.collection].has(k)))) throw bad('Champs invalides.');

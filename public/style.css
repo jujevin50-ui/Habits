@@ -15,3 +15,5 @@ aside nav{margin-top:36px}.task-header-actions{display:flex;gap:9px;align-items:
 .agenda-date.overdue{color:#f28a9d}
 
 .pair-code{display:block;font:600 24px ui-monospace,SFMono-Regular,monospace;letter-spacing:2px;word-spacing:5px;text-align:center;color:var(--accent);padding:24px 10px;user-select:all;overflow-wrap:anywhere}.sync-disconnect{font-size:11px;color:var(--muted);margin-top:18px;padding:0}#task-sync-status{font-size:12px}
+
+.task-reminder{display:inline-flex;align-items:center;gap:5px;color:var(--accent)}.task-reminder svg{width:13px;height:13px}

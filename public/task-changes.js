@@ -1,4 +1,5 @@
 import { validTaskFolders } from './tasks.js';
+import { validReminderAt } from './task-reminders.js';
 
 const equal = (a,b) => JSON.stringify(a) === JSON.stringify(b);
 export const taskSnapshot = state => structuredClone({ tasks: state.tasks, folders: state.folders || [] });
@@ -42,5 +43,5 @@ export function applyTaskChanges(snapshot, changes) {
 }
 
 export function validTaskSnapshot(snapshot) {
-  return snapshot && Array.isArray(snapshot.tasks) && snapshot.tasks.length <= 5000 && validTaskFolders(snapshot) && snapshot.tasks.every(t => typeof t.id==='string' && t.id.length>0 && t.id.length<=100 && typeof t.name==='string' && t.name.length<=150 && typeof t.done==='boolean' && typeof t.due==='string' && (t.due==='' || /^\d{4}-\d{2}-\d{2}$/.test(t.due)) && Array.isArray(t.subtasks) && t.subtasks.length<=1000 && t.subtasks.every(s=>s && typeof s.name==='string' && s.name.length<=1000 && typeof s.done==='boolean')) && new Set(snapshot.tasks.map(t=>t.id)).size===snapshot.tasks.length;
+  return snapshot && Array.isArray(snapshot.tasks) && snapshot.tasks.length <= 5000 && validTaskFolders(snapshot) && snapshot.tasks.every(t => typeof t.id==='string' && t.id.length>0 && t.id.length<=100 && typeof t.name==='string' && t.name.length<=150 && typeof t.done==='boolean' && validReminderAt(t.reminderAt) && typeof t.due==='string' && (t.due==='' || /^\d{4}-\d{2}-\d{2}$/.test(t.due)) && Array.isArray(t.subtasks) && t.subtasks.length<=1000 && t.subtasks.every(s=>s && typeof s.name==='string' && s.name.length<=1000 && typeof s.done==='boolean')) && new Set(snapshot.tasks.map(t=>t.id)).size===snapshot.tasks.length;
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "test": "node --test --test-isolation=none",
-    "check": "node --check public/app.js && node --check public/model.js && node --check public/tasks.js && node --check public/sw.js && node --check api/push.js && node --check api/cron.js && node --check server/notifications.js && node --check server/runtime.js && node --check public/task-changes.js && node --check public/task-sync.js && node --check server/task-sync.js && node --check api/tasks.js",
+    "check": "node --check public/app.js && node --check public/model.js && node --check public/tasks.js && node --check public/sw.js && node --check api/push.js && node --check api/cron.js && node --check server/notifications.js && node --check server/runtime.js && node --check public/task-changes.js && node --check public/task-sync.js && node --check server/task-sync.js && node --check api/tasks.js && node --check public/task-reminders.js",
     "vapid:generate": "web-push generate-vapid-keys"
   },
   "dependencies": {

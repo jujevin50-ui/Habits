@@ -46,7 +46,7 @@ test('changes made during an upload are reapplied to the downloaded state',()=>{
   assert.equal(merged.tasks[0].done,true);assert.equal(merged.tasks.length,2);
 });
 test('different device tokens isolate workspaces; shared tokens see tasks, folders and subtasks',async()=>{
-  const f=fixture(),snapshot={folders:[{id:'f',name:'Folder',parentId:null}],tasks:[task('a',{folderId:'f',subtasks:[{name:'Subtask',done:true}]})]};
+  const f=fixture(),snapshot={folders:[{id:'f',name:'Folder',parentId:null}],tasks:[task('a',{folderId:'f',subtasks:[{name:'Subtask',done:true}],reminderAt:'2026-12-01T09:00:00.000Z'})]};
   assert.equal((await f.call({action:'sync',changes:taskChanges(empty,snapshot)})).code,200);
   assert.deepEqual((await f.call({action:'sync',changes:[]})).data.tasks,snapshot.tasks);
   assert.equal((await f.call({action:'sync',changes:[]},'b'.repeat(64))).data.tasks.length,0);

@@ -6,6 +6,14 @@ Prototype de PWA personnelle pour les habitudes et les tâches, en français.
 
 Deux vues : dossiers (avec sous-dossiers et balayage horizontal) et échéances (toutes les tâches triées, avec leur dossier indiqué). Les tâches sans date viennent en dernier ; les tâches terminées sont repliées. Le choix de vue et les dossiers sont conservés sur l’appareil et inclus dans les exports JSON. Les anciennes tâches apparaissent dans « Sans dossier ». Supprimer un dossier déplace ses tâches et ses sous-dossiers vers son parent, sans les supprimer.
 
+## Rappels des tâches et historique des habitudes
+
+Dans une tâche, renseigner le champ **Rappel** (date et heure), puis enregistrer. Effacer ce champ pour supprimer le rappel. Activer les notifications dans les réglages de chaque appareil destinataire. Le serveur utilise le même déclenchement `/api/cron` et les mêmes clés que les habitudes : aucun paramètre Vercel ni tâche cron supplémentaire à créer.
+
+Pour les appareils associés, le planificateur lit les tâches partagées directement dans Redis. Créer, terminer ou supprimer une tâche sur le PC met donc à jour les rappels du téléphone sans devoir le laisser ouvert, une fois la modification synchronisée. Après cette mise à jour, ouvrir une fois l’app sur l’appareil destinataire pour actualiser son inscription. Sans association, les rappels sont ceux enregistrés depuis cet appareil. Les rappels sont enregistrés en UTC et affichés à l’heure locale. Une tâche terminée ou supprimée ne déclenche pas de nouvel envoi. Une tâche quotidienne recréée conserve son rappel, décalé au lendemain. Un retard du planificateur de moins de cinq minutes est rattrapé ; les appels multiples ne renvoient pas le même rappel. Toucher la notification ouvre les tâches.
+
+Pour corriger une habitude à une date précise, toucher son nom ou une case de la grille, choisir **Jour**, modifier la valeur ou la note et enregistrer. Les autres journées restent inchangées. Le sélecteur est limité aux dates entre la création de l’habitude et aujourd’hui ; modifier l’habitude elle-même reste une action distincte.
+
 ## Synchroniser les tâches entre PC et téléphone
 
 Les deux appareils doivent ouvrir le même domaine de production Vercel.

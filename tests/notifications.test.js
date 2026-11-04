@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createHandlers, dueReminders, validateSubscription, validateSchedule } from '../server/notifications.js';
+import { createHandlers, dueReminders, dueTaskReminders, validateSubscription, validateSchedule } from '../server/notifications.js';
 
 const subscription = { endpoint: 'https://fcm.googleapis.com/fcm/send/example', keys: { p256dh: Buffer.alloc(65, 1).toString('base64url'), auth: Buffer.alloc(16, 2).toString('base64url') } };
 const habit = { id: 'read', name: 'Lire', days: [3], reminders: ['10:00'], completedToday: null };
@@ -11,7 +11,8 @@ function fixture(send = async () => {}) {
     hset: async (_, fields) => Object.assign(hash, structuredClone(fields)),
     hgetall: async () => structuredClone(hash), hdel: async (_, id) => { delete hash[id]; },
     set: async (key, value) => { if (values.has(key)) return null; values.set(key, value); return 'OK'; },
-    del: async key => values.delete(key)
+    del: async key => values.delete(key),
+    get: async key => values.get(key) || null
   };
   const handlers = createHandlers({ redis, send, env: { CRON_SECRET: 'scheduler', VAPID_PUBLIC_KEY: 'public', VAPID_PRIVATE_KEY: 'private', VAPID_SUBJECT: 'mailto:test@example.com' }, now: () => new Date('2026-11-04T09:00:00Z') });
   async function call(name, body, token = name === 'cron' ? 'scheduler' : '', method = 'POST') {
@@ -20,7 +21,7 @@ function fixture(send = async () => {}) {
     return res;
   }
   const sync = () => call('push', { action: 'sync', subscription, habits: [habit], timezone: 'Europe/Paris' });
-  return { call, sync, hash };
+  return { call, sync, hash, values };
 }
 test('authentication and HTTP methods are enforced', async () => {
   const f=fixture();
@@ -86,4 +87,35 @@ test('registration and updates work without a personal token, including existing
   assert.equal((await f.call('push',{action:'sync',subscription,habits:[],timezone:'Europe/Paris'},'')).code,200);
   assert.equal((await f.call('push',{action:'test',subscription},'')).code,200);
   assert.equal((await f.call('push',{action:'disable',subscription},'')).code,200);
+});
+
+test('task reminders use absolute time, allow late cron runs and skip completed tasks',()=>{
+  const task={id:'task',name:'Rapport',done:false,reminderAt:'2026-11-04T09:00:00.000Z',folderLabel:'Travail'};
+  assert.equal(dueTaskReminders([task],new Date('2026-11-04T08:59:59Z')).length,0);
+  const due=dueTaskReminders([task],new Date('2026-11-04T09:03:00Z'));
+  assert.equal(due.length,1);assert.equal(due[0].title,'Rapport');assert.equal(due[0].body,'Travail');assert.equal(due[0].url,'/#tasks');
+  assert.equal(dueTaskReminders([task],new Date('2026-11-04T09:05:00Z')).length,0);
+  assert.equal(dueTaskReminders([{...task,done:true}],new Date('2026-11-04T09:00:00Z')).length,0);
+});
+
+test('task schedules validate dates and task-only reminders send once',async()=>{
+  const sent=[],f=fixture(async(s,p)=>sent.push(JSON.parse(p)));
+  const task={id:'task',name:'Rapport',done:false,reminderAt:'2026-11-04T09:00:00.000Z',folderLabel:'Travail'};
+  assert.equal((await f.call('push',{action:'sync',subscription,habits:[],tasks:[{...task,reminderAt:'invalid'}],timezone:'Europe/Paris'})).code,400);
+  assert.equal((await f.call('push',{action:'sync',subscription,habits:[],tasks:[task],timezone:'Europe/Paris'})).code,200);
+  await Promise.all([f.call('cron',{}),f.call('cron',{})]);assert.equal(sent.length,1);assert.equal(sent[0].title,'Rapport');
+  await f.call('push',{action:'sync',subscription,habits:[],tasks:[{...task,done:true}],timezone:'Europe/Paris'});
+  assert.equal((await f.call('cron',{})).data.sent,0);
+});
+
+test('closed phones use the current shared task data, including remote completion and deletion',async()=>{
+  const sent=[],f=fixture(async(s,p)=>sent.push(JSON.parse(p)));
+  await f.call('push',{action:'sync',subscription,habits:[],tasks:[],taskToken:'a'.repeat(64),timezone:'Europe/Paris'});
+  const workspace=Object.values(f.hash)[0].taskWorkspace,key=`habits:tasks:${workspace}`;
+  const task={id:'task',name:'Created on PC',done:true,reminderAt:'2026-11-04T09:00:00.000Z',folderId:'work'};
+  f.values.set(key,{folders:[{id:'work',name:'Travail',parentId:null}],tasks:[task]});
+  assert.equal((await f.call('cron',{})).data.sent,0);
+  f.values.set(key,{folders:[],tasks:[]});assert.equal((await f.call('cron',{})).data.sent,0);
+  f.values.set(key,{folders:[{id:'work',name:'Travail',parentId:null}],tasks:[{...task,done:false}]});
+  assert.equal((await f.call('cron',{})).data.sent,1);assert.equal(sent[0].body,'Travail');
 });

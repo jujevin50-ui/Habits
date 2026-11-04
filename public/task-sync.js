@@ -35,7 +35,7 @@ export function createTaskSync({getState,onChange,onStatus}) {
   }
   function schedule(){clearTimeout(timer);if(config)timer=setTimeout(()=>run().catch(()=>{}),500);}
   return {
-    get enabled(){return !!config;},get status(){return config?status:'Non associés';},run,schedule,
+    get enabled(){return !!config;},get token(){return config?.token;},get status(){return config?status:'Non associés';},run,schedule,
     async pair(){
       if(!config){config={token:newToken(),base:{tasks:[],folders:[]}};persist();}
       await run();return (await request('pair')).code;
