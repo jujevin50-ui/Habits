@@ -1,0 +1,73 @@
+/* Frosted surfaces with solid fallbacks and native iPhone safe areas. */
+:root{
+  --panel:#17212c;--line:rgba(210,231,255,.13);--muted:#a3afbf;--accent:#61e1bd;
+  --glass-fill:rgba(30,43,57,.62);--glass-solid:#1b2836;--glass-edge:rgba(231,244,255,.18);
+  --glass-shadow:0 12px 32px rgba(0,6,14,.18),inset 0 1px 0 rgba(255,255,255,.12);
+  background:#0c121b;
+}
+body{position:relative;isolation:isolate;background:#0c121b;color:#f3f7fc;min-height:100dvh}
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 0 0,rgba(56,141,151,.23),transparent 53%),radial-gradient(ellipse at 100% 45%,rgba(77,102,175,.17),transparent 55%),linear-gradient(160deg,#101b26,#0c121b 70%)}
+.habit,.task,.metric,.settings section,.display-menu,dialog,.task-view-switch,.empty{
+  background:var(--glass-fill);border:1px solid var(--glass-edge);box-shadow:var(--glass-shadow);
+  -webkit-backdrop-filter:blur(22px) saturate(145%);backdrop-filter:blur(22px) saturate(145%);
+}
+.habit{border-radius:30px;background:linear-gradient(145deg,color-mix(in srgb,var(--c) 9%,rgba(33,47,61,.76)),rgba(22,31,43,.64));box-shadow:0 14px 32px #0000001a,inset 0 1px 0 #ffffff16}
+.habit:hover{border-color:color-mix(in srgb,var(--c) 35%,var(--glass-edge))}
+.habit-icon{border-radius:18px;background:linear-gradient(145deg,color-mix(in srgb,var(--c) 23%,transparent),color-mix(in srgb,var(--c) 9%,transparent));box-shadow:inset 0 1px 0 #ffffff18}
+.habit-title p{color:var(--muted)}.habit-badge{background:color-mix(in srgb,var(--c) 12%,transparent);box-shadow:inset 0 1px 0 #ffffff09}
+.check{border-radius:18px;border-color:#ffffff1c;background:#ffffff06}.check.done{background:linear-gradient(145deg,color-mix(in srgb,var(--c) 78%,white),var(--c));box-shadow:inset 0 1px 0 #ffffff60,0 4px 16px color-mix(in srgb,var(--c) 16%,transparent)}
+.task{border-radius:24px}.metric,.settings section,.empty{border-radius:28px}.settings section{margin-block:16px}.settings h2{font-size:18px;letter-spacing:-.4px}
+.display-menu{border-radius:26px;background:rgba(27,40,54,.94);box-shadow:0 18px 48px #00000045,inset 0 1px 0 #ffffff22}
+dialog{border-radius:32px;background:rgba(23,34,47,.94);box-shadow:0 28px 90px #00000065,inset 0 1px 0 #ffffff24}
+dialog::backdrop{background:#02070c66;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+.dialog-head,.actions{background:rgba(23,34,47,.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.dialog-head button{border-radius:50%;color:var(--muted);background:#ffffff0c}
+.primary{border-radius:24px;background:linear-gradient(150deg,#a3f3dc,#61e1bd);color:#0c3127;font-weight:650;border:1px solid #dbfff04d;box-shadow:0 4px 12px #36c49716,inset 0 1px 0 #ffffff77}
+.secondary,.add-habit,.icon-action{border-radius:22px;border:1px solid var(--glass-edge);background:linear-gradient(145deg,#ffffff12,#ffffff05);box-shadow:inset 0 1px 0 #ffffff16;color:#e9f4fa}
+.add-habit,.icon-action{border-radius:50%;color:var(--accent)}
+.chip,.folder-tabs button{border-radius:24px}.chip.active,.folder-tabs button.active{background:#ffffff12;color:var(--accent);border-color:#ffffff1c;box-shadow:inset 0 1px 0 #ffffff12}
+.task-view-switch{border-radius:26px;padding:5px}.task-view-switch button{border-radius:21px}.task-view-switch .active{color:var(--accent);background:linear-gradient(150deg,#ffffff15,#ffffff07);box-shadow:0 2px 6px #00000012,inset 0 1px 0 #ffffff16}
+.views{border-color:var(--glass-edge);border-radius:20px}.views button,.views .active{border-radius:15px}.views .active{background:#ffffff12;color:var(--accent)}
+input:not([type=checkbox]):not([type=color]),select,textarea{border-radius:16px;background:rgba(6,15,25,.38);border-color:var(--glass-edge);box-shadow:inset 0 1px 2px #00000010;color:#f3f7fc}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--accent) 65%,transparent);outline-offset:2px}
+select option{background:var(--glass-solid);color:inherit}.days button{border-radius:16px;background:#ffffff09;border:1px solid #ffffff0a}.days button.active{background:color-mix(in srgb,var(--accent) 22%,transparent);border-color:color-mix(in srgb,var(--accent) 40%,transparent);color:var(--accent)}
+.icon-picker button{border-radius:16px;background:#ffffff05;border-color:var(--glass-edge)}.icon-picker button.active{background:#61e1bd16;color:var(--accent);border-color:var(--accent)}
+.heat-months,.heat-days{color:#8b9bab}.daily-track{background:#e7f1ff13}.daily-track i{background:linear-gradient(90deg,#47c9ac,#96edcf)}
+aside{background:#13213135;border-right:1px solid #ffffff0a;-webkit-backdrop-filter:blur(28px) saturate(150%);backdrop-filter:blur(28px) saturate(150%)}
+nav button{border-radius:22px}nav button.active{background:#ffffff0c;color:var(--accent);box-shadow:inset 0 1px 0 #ffffff0e}
+#toast,.dialog-status{border:1px solid #ffffff9c;background:rgba(226,248,241,.94);border-radius:23px;box-shadow:0 8px 30px #00000020;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);color:#10382c}
+button,.chip{transition:background .18s,border-color .18s,box-shadow .18s,transform .18s}
+@media(hover:hover){.secondary:hover,.add-habit:hover,.icon-action:hover{background:#ffffff18}.primary:hover{box-shadow:0 6px 20px #36c49730,inset 0 1px 0 #ffffff99}}
+@media(prefers-reduced-motion:no-preference){button:not(.cell):not(:disabled):active{transform:scale(.97)}}
+body.light{--panel:#f2f7fb;--line:#47658120;--muted:#586a7a;--accent:#15755e;--glass-fill:rgba(255,255,255,.64);--glass-solid:#f2f7fb;--glass-edge:rgba(255,255,255,.86);--glass-shadow:0 8px 28px #24456209,inset 0 1px 0 #ffffff;background:#ecf2f7;color:#192b3b}
+body.light::before{background:radial-gradient(ellipse at 0 0,#9ddbcf4d,transparent 55%),radial-gradient(ellipse at 100% 45%,#b5c7ee59,transparent 60%),linear-gradient(160deg,#edf4f6,#eaf0f8 70%)}
+body.light :is(.task,.metric,.settings section,.display-menu,dialog,.task-view-switch,.empty){background:var(--glass-fill);border-color:var(--glass-edge);box-shadow:var(--glass-shadow)}
+body.light .habit{background:linear-gradient(145deg,color-mix(in srgb,var(--c) 8%,rgba(255,255,255,.82)),rgba(255,255,255,.66));border-color:var(--glass-edge);box-shadow:var(--glass-shadow)}
+body.light .habit-title,body.light .settings{color:#192b3b}body.light .habit-title p{color:var(--muted)}
+body.light :is(.primary){background:linear-gradient(150deg,#249a7b,#14765e);color:white;border-color:#ffffff55;box-shadow:inset 0 1px 0 #ffffff40,0 4px 12px #14765e15}
+body.light :is(.secondary,.add-habit,.icon-action){background:linear-gradient(145deg,#ffffffbb,#ffffff55);color:var(--accent);border-color:var(--glass-edge);box-shadow:inset 0 1px 0 #fff}
+body.light .chip.active,body.light .folder-tabs button.active,body.light .task-view-switch .active,body.light .views .active{background:#ffffffa8;color:var(--accent);border-color:#ffffffcc;box-shadow:inset 0 1px 0 #fff,0 2px 8px #24456208}
+body.light input:not([type=checkbox]),body.light select,body.light textarea{background:#ffffff80;border-color:#47658125;color:#192b3b}
+body.light .dialog-head,body.light .actions{background:rgba(242,247,251,.96)}body.light dialog{background:rgba(242,247,251,.96)}body.light .display-menu{background:rgba(242,247,251,.95)}
+body.light .dialog-head button,body.light .days button{background:#24456208;color:#586a7a}body.light .days button.active{color:var(--accent);background:#15755e15;border-color:#15755e55}
+body.light .heat-months,body.light .heat-days{color:#687b89}body.light aside{background:#ffffff40;border-color:#ffffff80}body.light nav button.active{background:#ffffffb0;color:var(--accent);box-shadow:inset 0 1px 0 #fff}
+@media(max-width:650px), (pointer:coarse) and (max-width:1000px) and (max-height:500px){
+  main{padding-bottom:calc(126px + var(--safe-bottom))}
+  aside,body.light aside{left:calc(12px + var(--safe-left));right:calc(12px + var(--safe-right));bottom:calc(8px + var(--safe-bottom));padding:6px;border:1px solid var(--glass-edge);border-radius:32px;background:rgba(25,38,52,.72);box-shadow:0 10px 35px #00000028,inset 0 1px 0 #ffffff20;-webkit-backdrop-filter:blur(30px) saturate(175%);backdrop-filter:blur(30px) saturate(175%)}
+  body.light aside{background:rgba(246,251,255,.76);box-shadow:0 10px 35px #24456216,inset 0 1px 0 #fff}
+  nav{gap:3px}nav button{min-height:52px;border-radius:25px;gap:3px;padding:6px 2px;color:#a6b4c4}nav button span{font-size:10px;font-weight:550;letter-spacing:-.1px}nav button svg{width:22px;height:22px}
+  nav button.active{background:linear-gradient(150deg,#ffffff1a,#ffffff09);box-shadow:inset 0 1px 0 #ffffff1c;color:var(--accent)}body.light nav button{color:#66798a}body.light nav button.active{background:linear-gradient(150deg,#fff,#ffffff70);color:var(--accent)}
+  .habit{border-radius:28px}.settings section{border-radius:28px}.task{border-radius:24px}.display-menu{border-radius:26px}dialog{border-radius:30px}.dialog-head,.actions{background:rgba(23,34,47,.96)}
+  .check,.habit-icon{border-radius:17px}.primary,.secondary{border-radius:23px}.add-habit,.icon-action{border-radius:50%}
+  #toast{bottom:calc(96px + var(--safe-bottom))}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.habit,.task,.metric,.settings section,.display-menu,dialog,.task-view-switch,aside{background:var(--glass-solid)}}
+@media(prefers-reduced-transparency:reduce),(prefers-contrast:more){
+  .habit,.task,.metric,.settings section,.display-menu,dialog,.task-view-switch,aside,body.light aside,body.light .habit,body.light .task,body.light .settings section,body.light dialog{background:var(--glass-solid);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;border-color:var(--muted)}
+  body::before{background:none}dialog::backdrop{-webkit-backdrop-filter:none;backdrop-filter:none;background:#0009}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:is(body,body.light) :is(.habit,.task,.metric,.settings section,.display-menu,dialog,.task-view-switch,aside){background:var(--glass-solid)}}
+@media(prefers-reduced-transparency:reduce),(prefers-contrast:more){
+  body,body.light{--glass-fill:var(--glass-solid)}
+  :is(body,body.light) :is(.habit,.task,.metric,.settings section,.display-menu,dialog,.task-view-switch,aside){background:var(--glass-solid);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;border-color:var(--muted)}
+}
