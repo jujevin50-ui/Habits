@@ -2,6 +2,10 @@
 
 Prototype de PWA personnelle pour les habitudes et les tâches, en français.
 
+## Tâches
+
+Deux vues : dossiers (avec sous-dossiers et balayage horizontal) et échéances (toutes les tâches triées, avec leur dossier indiqué). Les tâches sans date viennent en dernier ; les tâches terminées sont repliées. Le choix de vue et les dossiers sont conservés sur l’appareil et inclus dans les exports JSON. Les anciennes tâches apparaissent dans « Sans dossier ». Supprimer un dossier déplace ses tâches et ses sous-dossiers vers son parent, sans les supprimer.
+
 ## Lancer localement
 
 Avec Node.js installé :
