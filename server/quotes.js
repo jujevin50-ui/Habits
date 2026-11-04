@@ -18,7 +18,7 @@ export function dueQuotes(device,now) {
     preferences.times.forEach((scheduled,slot)=>{
       if(scheduled!==time)return;
       const quote=quoteForDay(date,slot),event=`quote:${date}:${slot}`;
-      due.set(event,{title:'Quotes',body:quote.author?`${quote.text} — ${quote.author}`:quote.text,tag:`quote-${slot}`,event});
+      due.set(event,{title:'Quotes',body:quote.author?`${quote.text} — ${quote.author}`:quote.text,tag:`quote-${slot}`,event,url:'/#quotes'});
     });
   }
   return [...due.values()];

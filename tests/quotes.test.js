@@ -42,7 +42,7 @@ test('default and custom schedules respect local winter and summer times',()=>{
   const device={quotes:enabled,timezone:'Europe/Paris'};
   assert.equal(dueQuotes(device,new Date('2026-11-04T06:59:00Z')).length,0);
   for(const hour of ['07','12','20'])assert.equal(dueQuotes(device,new Date(`2026-11-04T${hour}:00:00Z`)).length,1);
-  assert.equal(dueQuotes(device,new Date('2026-07-01T06:00:00Z')).length,1);
+  assert.equal(dueQuotes(device,new Date('2026-07-01T06:00:00Z')).length,1);assert.equal(dueQuotes(device,new Date('2026-11-04T07:00:00Z'))[0].url,'/#quotes');
   assert.equal(dueQuotes({...device,quotes:{enabled:true,times:['09:15','14:30','22:00']}},new Date('2026-11-04T08:15:00Z')).length,1);
   assert.equal(dueQuotes({...device,quotes:{...enabled,enabled:false}},new Date('2026-11-04T07:00:00Z')).length,0);
 });
