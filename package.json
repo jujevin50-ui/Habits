@@ -1,0 +1,1 @@
+{"name":"habits","version":"1.0.0","private":true,"type":"module","scripts":{"dev":"node scripts/serve.mjs","test":"node --test","check":"node --check public/app.js && node --check public/sw.js && node --check api/push.js"},"dependencies":{"@upstash/redis":"^1.35.0","web-push":"^3.6.7"}}
