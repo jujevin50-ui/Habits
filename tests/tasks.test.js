@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { folderPath, folderDescendants, orderedFolders, sortTasks, removeFolder } from '../public/tasks.js';
+import { folderPath, folderDescendants, orderedFolders, sortTasks, filterTasks, removeFolder } from '../public/tasks.js';
 import { validData } from '../public/model.js';
 
 const folders = [
@@ -38,6 +38,20 @@ test('folder deletion preserves tasks and reattaches child folders', () => {
   assert.equal(validData(state),true);
   assert.equal(removeFolder(state,'project'), '');
   assert.equal(state.tasks[1].folderId,'');
+});
+test('today and overdue filters exclude completed and undated tasks without changing data', () => {
+  const tasks = [task('late','2026-11-04'),task('today','2026-11-05'),task('future','2026-11-06'),task('undated'),{...task('done','2026-11-04'),done:true}];
+  const before=structuredClone(tasks);
+  assert.deepEqual(filterTasks(tasks,{today:'2026-11-05',filter:'today'}).map(t=>t.id),['today']);
+  assert.deepEqual(filterTasks(tasks,{today:'2026-11-05',filter:'overdue'}).map(t=>t.id),['late']);
+  assert.equal(filterTasks(tasks).length,5);
+  assert.deepEqual(tasks,before);
+});
+test('search finds accented titles, nested folder paths and subtasks together', () => {
+  const tasks=[{...task('report','','project'),name:'Préparer la réunion',subtasks:[{name:'Vérifier le budget',done:false}]},task('other','','home')];
+  assert.deepEqual(filterTasks(tasks,{folders,query:'  REUNION  budget travail  '}).map(t=>t.id),['report']);
+  assert.deepEqual(filterTasks(tasks,{folders,query:'maison'}).map(t=>t.id),['other']);
+  assert.equal(filterTasks(tasks,{folders,query:'réunion maison'}).length,0);
 });
 test('invalid folder references, duplicate ids and cycles are rejected', () => {
   const state = { version:1, habits:[], tasks:[task('task','','project')], folders };

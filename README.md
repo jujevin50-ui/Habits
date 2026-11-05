@@ -4,7 +4,11 @@ Prototype de PWA personnelle pour les habitudes et les tâches, en français.
 
 ## Tâches
 
-Deux vues : dossiers (avec sous-dossiers et balayage horizontal) et échéances (toutes les tâches triées, avec leur dossier indiqué). Les tâches sans date viennent en dernier ; les tâches terminées sont repliées. Le choix de vue et les dossiers sont conservés sur l’appareil et inclus dans les exports JSON. Les anciennes tâches apparaissent dans « Sans dossier ». Supprimer un dossier déplace ses tâches et ses sous-dossiers vers son parent, sans les supprimer.
+Deux vues : **Échéances**, avec les tâches regroupées par date (retards en premier, tâches sans date en dernier), et **Dossiers**, avec sous-dossiers, sélection directe et balayage horizontal. Les tâches terminées sont repliées et peuvent être rouvertes.
+
+La saisie rapide ajoute une tâche depuis la liste ; son bouton calendrier déplie le choix du dossier et de l’échéance. La recherche retrouve les noms, sous-tâches et chemins de dossiers sans distinction d’accents ; les filtres **Toutes**, **Aujourd’hui** et **En retard** s’appliquent au dossier courant ou à toutes les tâches selon la vue. Les filtres de date ne montrent que les tâches à faire. Un appui sur le titre ouvre la modification complète, avec les rappels ; les réglages de priorité, récurrence et sous-tâches sont regroupés dans une section dépliable. Cocher une sous-tâche conserve son groupe ouvert.
+
+Les dossiers affichent des noms courts dans les onglets et le chemin complet dans le sélecteur. Le choix de vue et de dossier est conservé sur l’appareil. Tâches et dossiers sont synchronisés et inclus dans les exports JSON. Les anciennes tâches apparaissent dans « Sans dossier ». Supprimer un dossier déplace ses tâches et ses sous-dossiers vers son parent, sans les supprimer.
 
 ## Quotes : trois citations par jour
 

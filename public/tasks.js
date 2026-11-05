@@ -38,6 +38,17 @@ export function sortTasks(tasks) {
   return tasks.toSorted((a,b) => (a.due || '9999-12-31').localeCompare(b.due || '9999-12-31') || a.name.localeCompare(b.name, 'fr'));
 }
 
+export function filterTasks(tasks, {query = '', filter = 'all', today, folders = []} = {}) {
+  const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('fr');
+  const words = normalize(query.trim()).split(/\s+/).filter(Boolean);
+  return tasks.filter(task => {
+    if (filter === 'today' && (task.done || task.due !== today)) return false;
+    if (filter === 'overdue' && (task.done || !task.due || task.due >= today)) return false;
+    const searchable = normalize([task.name, folderPath(folders, taskFolder(task)), ...task.subtasks.map(sub => sub.name)].join(' '));
+    return words.every(word => searchable.includes(word));
+  });
+}
+
 export function validTaskFolders(state) {
   const folders = state.folders ?? [];
   if (!Array.isArray(folders) || folders.length > 200 || !folders.every(f => f && typeof f.id === 'string' && f.id.length > 0 && f.id.length <= 100 && typeof f.name === 'string' && f.name.trim().length > 0 && f.name.length <= 60 && (f.parentId == null || typeof f.parentId === 'string'))) return false;
