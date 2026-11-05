@@ -1,31 +1,35 @@
-# Sources des citations classiques
+# Sources des citations
 
-La bibliothèque comprend exactement **1 000 citations attribuées** et **340 phrases originales**, conservées séparément par le champ `author` (null pour les phrases originales).
+La bibliothèque comprend **1 000 citations attribuées** : les 340 phrases originales de l’app ont été retirées et 300 classiques remplacés par des passages antiques. Les auteurs, œuvres et liens sont accessibles sous « Source » dans l’onglet Quotes. Le même catalogue alimente les notifications et la lecture hors ligne.
 
-Les 20 citations classiques antérieures sont conservées avec leurs références. Les **980 ajouts** sont transcrits à partir de cinq éditions françaises identifiables :
-
-| Auteur | Œuvre | Ajouts |
+| Auteur | Œuvre | Passages importés |
 |---|---|---:|
-| François de La Rochefoucauld | Réflexions ou sentences et maximes morales | 300 |
-| Jean de La Bruyère | Les Caractères, édition de 1696 | 310 |
-| Sébastien-Roch Nicolas de Chamfort | Maximes et pensées, Œuvres complètes, tome I, édition de 1824 | 220 |
+| Marc Aurèle | Pensées pour moi-même | 210 |
+| Épictète | Manuel | 30 |
+| Sénèque | Des bienfaits | 30 |
+| Aristote | Éthique à Nicomaque | 30 |
+| François de La Rochefoucauld | Réflexions ou sentences et maximes morales | 177 |
+| Jean de La Bruyère | Les Caractères, édition de 1696 | 177 |
+| Sébastien-Roch Nicolas de Chamfort | Maximes et pensées, Œuvres complètes, tome I | 176 |
 | Germaine de Staël | De l’influence des passions sur le bonheur des individus et des nations | 125 |
-| Jean de La Fontaine | Fables, édition de 1868 | 25 |
+| Jean de La Fontaine | Fables | 25 |
 
-Chaque ajout comporte son auteur, une référence d’œuvre, un lien vers une ligne de l’édition numérisée à une révision figée et un identifiant `sourceId`. Les extraits de paragraphes plus longs sont signalés par `(extrait)`. Les graphies historiques sont conservées ; seules les coupures de ligne, marques d’italique et références éditoriales sont retirées. Un extrait contient une phrase complète, ou un groupe de vers, et n’est pas une paraphrase inventée. Les compteurs « passage » et « paragraphe » servent au repérage dans l’import ; la ligne liée et les numéros de maximes/remarques permettent de vérifier dans le texte.
+Ces 980 passages complètent 20 classiques antérieurs qui conservent leurs références d’œuvre. Aristote n’est pas classé parmi les stoïciens.
 
-Le choix privilégie les pensées autonomes sur le caractère, les relations humaines, la lucidité, l’apprentissage, le courage, le travail, le temps et le bonheur. Le corpus n’est pas une garantie de vérité universelle des opinions historiques de ces auteurs. Il ne présente pas les phrases originales comme des citations de philosophes.
+## Traductions et transcription
 
-`editions.json` fixe les dépôts, révisions, noms de fichiers, encodages et sommes SHA-256 des cinq transcriptions. Les textes littéraires de ces auteurs et éditions sont dans le domaine public. Les miroirs sont ceux de GITenberg ; les fichiers complets contiennent les notices de l’édition numérique. La licence générale des éditions Project Gutenberg est fournie dans `LICENSE.txt` ; les notices de production d’origine sont conservées dans `CREDITS.txt`.
+Les 210 passages de Marc Aurèle suivent la traduction de **Jules Barthélemy-Saint-Hilaire (1876)**, dans le domaine public. La transcription française est conservée dans le dépôt public `Ousseynou-Gaye/chatbot-nlp-rag`, fichier `data/processed/pensees_chunks.json`. Ce miroir identifie son texte comme celui de Wikisource. Chaque passage renvoie à sa ligne et à son livre/paragraphe (ou groupe de paragraphes de l’import), sans inventer de section plus précise. Seuls les marqueurs de notes, numéros de pagination isolés et espaces de mise en page sont retirés ; la graphie historique reste conservée. Les extraits sont signalés.
 
-> This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the terms of the Project Gutenberg License included with this eBook or online at https://www.gutenberg.org/license.
+Les **90 passages d’Aristote, d’Épictète et de Sénèque** sont des traductions françaises faites pour Habits à partir des éditions anglaises de **D. P. Chase**, **Thomas Wentworth Higginson** et **Aubrey Stewart**, respectivement. Leur référence affiche explicitement « traduction française pour Habits d’après… ». Le champ `sourceText` conserve le passage anglais réellement utilisé, et le lien mène à celui-ci, pas à une édition française fictive. Les formulations françaises ne sont pas attribuées à un traducteur historique français. La sélection porte sur le caractère, l’action, les habitudes, la maîtrise de soi, l’amitié et la bienveillance. Elle écarte les introductions et commentaires des éditeurs.
 
-La collection Debian fortunes-fr a servi uniquement de piste bibliographique pour retrouver certains vers de La Fontaine, qui ont ensuite été contrôlés dans l’édition primaire. Sa provenance et ses conditions figurent dans `FORTUNES-CREDITS.txt`.
+Les 680 passages français conservés de La Rochefoucauld, La Bruyère, Chamfort, Staël et La Fontaine proviennent des éditions GITenberg déjà identifiées. Les extraits de paragraphes et groupes de vers sont signalés ; les graphies historiques restent conservées. Les numéros de « passage » et « paragraphe » servent au repérage dans l’import ; les lignes liées et numéros de maximes ou remarques permettent de retrouver les textes.
 
-Pour vérifier les 980 ajouts contre les fichiers d’origine :
+## Provenance et vérification
+
+`editions.json` fixe les neuf dépôts, révisions, fichiers, encodages et sommes SHA-256. Les œuvres et traductions historiques utilisées sont dans le domaine public. La licence générale des éditions Project Gutenberg figure dans `LICENSE.txt` ; leurs notices et les crédits du miroir de Marc Aurèle sont conservés dans `CREDITS.txt`. Les notes et introductions modernes ne sont pas utilisées comme citations des auteurs antiques. La collection Debian fortunes-fr n’a servi que de piste bibliographique pour des vers de La Fontaine ensuite vérifiés dans l’édition primaire ; voir `FORTUNES-CREDITS.txt`.
 
 ```sh
-python scripts/verify-classic-quotes.py --source-dir /chemin/des/cinq/fichiers
+python scripts/verify-classic-quotes.py --source-dir /chemin/des/sources --download
 ```
 
-L’option `--download` permet de télécharger les cinq versions figées dans ce dossier avant vérification. Le script conserve la vérification HTTPS et refuse un fichier dont la somme SHA-256 diffère du manifeste.
+Le téléchargement conserve la vérification HTTPS et refuse toute somme SHA-256 différente. Le script vérifie 980 passages sources, leurs auteurs, leurs versions et leurs lignes liées. Pour les traductions, il contrôle la présence du passage **anglais** conservé ; la fidélité de la formulation française relève de la relecture éditoriale et ne peut pas être prouvée par une recherche textuelle. Les liens de Marc Aurèle sont aussi contrôlés contre l’identifiant de leur bloc JSON.

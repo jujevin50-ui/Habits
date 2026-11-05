@@ -22,10 +22,9 @@ test('quotes are opt-in and have three valid distinct default hours',()=>{
   for(const value of [{enabled:true,times:['08:00','08:00','21:00']},{enabled:true,times:['08:00','13:00']},{enabled:true,times:['25:00','13:00','21:00']},{enabled:'yes',times:DEFAULT_QUOTE_TIMES}])assert.equal(validQuoteSettings(value),false);
 });
 
-test('library has 1,000 attributed classics plus 340 original phrases, with source references',()=>{
-  assert.equal(quotes.length,1340);assert.equal(new Set(quotes.map(q=>q.text)).size,1340);
-  assert.equal(quotes.filter(q=>q.author===null).length,340);
-  assert.equal(quotes.filter(q=>q.author===null&&q.category==='Humanité').length,40);
+test('library has 1,000 attributed classics with source references and no app-original slogans',()=>{
+  assert.equal(quotes.length,1000);assert.equal(new Set(quotes.map(q=>q.text)).size,1000);
+  assert.equal(quotes.filter(q=>!q.author).length,0);
   assert.equal(quotes.filter(q=>q.author).length,1000);
   for(const q of quotes){assert.ok(q.text.length>10&&q.text.length<=180);assert.ok((q.text+(q.author||'')).length<240);if(q.author)assert.ok(q.source);}
 });
@@ -34,7 +33,7 @@ test('new classics link to frozen source editions and remain textually distinct'
   const editions=JSON.parse(readFileSync(new URL('../public/quote-sources/editions.json',import.meta.url),'utf8'));
   const imported=quotes.filter(q=>q.sourceId);
   assert.equal(imported.length,980);
-  assert.equal(new Set(quotes.filter(q=>q.author).map(q=>q.author)).size,18);
+  assert.equal(new Set(quotes.filter(q=>q.author).map(q=>q.author)).size,21);
   for(const q of imported){
     const edition=editions[q.sourceId];assert.ok(edition);assert.equal(q.author,edition.author);
     assert.match(edition.commit,/^[a-f0-9]{40}$/);assert.match(edition.sha256,/^[a-f0-9]{64}$/);
@@ -43,6 +42,18 @@ test('new classics link to frozen source editions and remain textually distinct'
   }
   const normalized=quotes.map(q=>q.text.toLowerCase().replaceAll('œ','oe').normalize('NFKD').replace(/[^a-z0-9]/g,''));
   assert.equal(new Set(normalized).size,quotes.length);
+});
+
+test('300 replacements come from ancient philosophy and translations are disclosed',()=>{
+  const ancient=quotes.filter(q=>['marc-aurele','aristote','seneque','epictete'].includes(q.sourceId));
+  assert.equal(ancient.length,300);
+  assert.equal(ancient.filter(q=>q.author==='Marc Aurèle').length,210);
+  for(const author of ['Aristote','Sénèque','Épictète'])assert.equal(ancient.filter(q=>q.author===author).length,30);
+  for(const q of ancient){
+    assert.equal(q.category,q.author==='Aristote'?'Philosophie antique':'Stoïcisme');
+    if(q.sourceId==='marc-aurele'){assert.ok(q.sourceChunk);assert.match(q.source,/Barthélemy-Saint-Hilaire/);}
+    else{assert.equal(q.translation,true);assert.ok(q.sourceText.length>10);assert.match(q.source,/traduction française pour Habits/);}
+  }
 });
 
 test('three different daily quotes rotate through the entire library before repeating',()=>{

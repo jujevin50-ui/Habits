@@ -43,5 +43,46 @@
     "encoding": "utf-8-sig",
     "sha256": "062e03a6cdf08e3428dede08b130070b7e92043d64e92f017a076d3440eb9410",
     "downloadUrl": "https://raw.githubusercontent.com/GITenberg/Fables_56327/f725faef5efa34f76bb74842020877375bb0fb64/56327-0.txt"
+  },
+  "marc-aurele": {
+    "author": "Marc Aurèle",
+    "repository": "https://github.com/Ousseynou-Gaye/chatbot-nlp-rag",
+    "commit": "e36060940d6bfb5f0c481aa9a31c2c43a5554b75",
+    "file": "data/processed/pensees_chunks.json",
+    "encoding": "utf-8",
+    "sha256": "6795bf6f1a4413687e885e3ee5fe8c743fd12cbd608f65e0cb0c7ce11f513ff1",
+    "downloadUrl": "https://raw.githubusercontent.com/Ousseynou-Gaye/chatbot-nlp-rag/e36060940d6bfb5f0c481aa9a31c2c43a5554b75/data/processed/pensees_chunks.json",
+    "format": "chunks-json",
+    "translator": "Jules Barthélemy-Saint-Hilaire (1876)"
+  },
+  "aristote": {
+    "author": "Aristote",
+    "repository": "https://github.com/GITenberg/The-Ethics-of-Aristotle_8438",
+    "commit": "4af47e3be88ff6d2817d933bfc25508614cfe9e2",
+    "file": "8438-8.txt",
+    "encoding": "latin-1",
+    "sha256": "60aeb2db9ec1e550a81bc828027a944fbbee0053ffa687819de964a4b6b773b3",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/The-Ethics-of-Aristotle_8438/4af47e3be88ff6d2817d933bfc25508614cfe9e2/8438-8.txt",
+    "translator": "D. P. Chase"
+  },
+  "epictete": {
+    "author": "Épictète",
+    "repository": "https://github.com/GITenberg/The-Enchiridion_45109",
+    "commit": "9cb677e2921022896e68d2f10d7c3a697af6b137",
+    "file": "45109-0.txt",
+    "encoding": "utf-8-sig",
+    "sha256": "0d80895ec0ed101235a78b89646ee7e4820c9d8fadd0318c69e4195728a787bc",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/The-Enchiridion_45109/9cb677e2921022896e68d2f10d7c3a697af6b137/45109-0.txt",
+    "translator": "Thomas Wentworth Higginson"
+  },
+  "seneque": {
+    "author": "Sénèque",
+    "repository": "https://github.com/GITenberg/L.-Annaeus-Seneca-on-Benefits_3794",
+    "commit": "110e9bdac66b3152998b90b915205b0e4f923c50",
+    "file": "3794.txt",
+    "encoding": "ascii",
+    "sha256": "6a37ca2145425896f9be58dc647f167b0459f58e78c7be118a12db715b3eca1e",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/L.-Annaeus-Seneca-on-Benefits_3794/110e9bdac66b3152998b90b915205b0e4f923c50/3794.txt",
+    "translator": "Aubrey Stewart"
   }
 }

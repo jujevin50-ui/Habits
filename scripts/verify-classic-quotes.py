@@ -27,6 +27,7 @@ def main():
     quotes = json.loads(library.split('export const quotes = ', 1)[1].rsplit(';', 1)[0])
     args.source_dir.mkdir(parents=True, exist_ok=True)
     sources = {}
+    source_lines = {}
     for key, edition in editions.items():
         path = args.source_dir / edition['file']
         if args.download:
@@ -35,11 +36,15 @@ def main():
                 raw = response.read()
             if hashlib.sha256(raw).hexdigest() != edition['sha256']:
                 raise ValueError(f'Checksum mismatch for {key}')
+            path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(raw)
         raw = path.read_bytes()
         if hashlib.sha256(raw).hexdigest() != edition['sha256']:
             raise ValueError(f'Checksum mismatch for {key}')
-        sources[key] = raw.decode(edition['encoding']).splitlines()
+        decoded = raw.decode(edition['encoding'])
+        source_lines[key] = decoded.splitlines()
+        sources[key] = ({row['chunk_id']: row for row in json.loads(decoded)}
+                        if edition.get('format') == 'chunks-json' else decoded.splitlines())
     checked = 0
     for quote in quotes:
         key = quote.get('sourceId')
@@ -52,13 +57,23 @@ def main():
         if not quote['sourceUrl'].startswith(expected):
             raise ValueError(f'Source revision mismatch: {quote["text"]}')
         line = int(quote['sourceUrl'][len(expected):])
-        passage = '\n'.join(sources[key][line - 1:line + 150])
-        if normalize(quote['text']) not in normalize(passage):
+        if edition.get('format') == 'chunks-json':
+            if f'"chunk_id": "{quote["sourceChunk"]}"' not in source_lines[key][line - 1]:
+                raise ValueError(f'Chunk does not match linked line: {quote["text"]}')
+            passage = sources[key][quote['sourceChunk']]['text']
+            # Remove PDF footnote markers and isolated page numbers.
+            passage = re.sub(r'\[\d+\]', '', passage)
+            passage = re.sub(r'\b\d+\b', '', passage)
+        else:
+            passage = '\n'.join(sources[key][line - 1:line + 150])
+        # Translated wording needs editorial review; check its original passage.
+        original = quote['sourceText'] if quote.get('translation') else quote['text']
+        if normalize(original) not in normalize(passage):
             raise ValueError(f'Quotation absent from linked passage: {quote["text"]}')
         checked += 1
     if checked != 980:
         raise ValueError(f'Expected 980 newly sourced quotations, found {checked}')
-    print(f'Verified {checked} quotations against five pinned editions and SHA-256 hashes.')
+    print(f'Verified {checked} source passages against {len(editions)} pinned editions and SHA-256 hashes.')
 
 
 if __name__ == '__main__':

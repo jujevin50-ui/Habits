@@ -414,3 +414,143 @@ MONSEIGNEUR,
 S'IL y a quelque chose d'ingénieux dans la république des lettres,
 on peut dire que
 
+
+
+NOUVEAUX PASSAGES ANTIQUES
+
+Marc Aurèle
+https://raw.githubusercontent.com/Ousseynou-Gaye/chatbot-nlp-rag/e36060940d6bfb5f0c481aa9a31c2c43a5554b75/data/processed/pensees_chunks.json
+Traduction source : Jules Barthélemy-Saint-Hilaire (1876)
+Pensées pour moi-même, traduction française de 1876, domaine public. Transcription importée par Ousseynou Gaye ; source indiquée par le miroir : Wikisource. Seul le texte antique est utilisé, aucun code ni commentaire du projet.
+
+Aristote
+https://raw.githubusercontent.com/GITenberg/The-Ethics-of-Aristotle_8438/4af47e3be88ff6d2817d933bfc25508614cfe9e2/8438-8.txt
+Traduction source : D. P. Chase
+The Project Gutenberg EBook of Ethics, by Aristotle
+#5 in our series by Aristotle
+
+Copyright laws are changing all over the world. Be sure to check the
+copyright laws for your country before downloading or redistributing
+this or any other Project Gutenberg eBook.
+
+This header should be the first thing seen when viewing this Project
+Gutenberg file.  Please do not remove it.  Do not change or edit the
+header without written permission.
+
+Please read the "legal small print," and other information about the
+eBook and Project Gutenberg at the bottom of this file.  Included is
+important information about your specific rights and restrictions in
+how the file may be used.  You can also find out about how to make a
+donation to Project Gutenberg, and how to get involved.
+
+
+**Welcome To The World of Free Plain Vanilla Electronic Texts**
+
+**eBooks Readable By Both Humans and By Computers, Since 1971**
+
+*****These eBooks Were Prepared By Thousands of Volunteers!*****
+
+
+Title: Ethics
+
+Author: Aristotle
+
+Release Date: July, 2005 [EBook #8438]
+[Yes, we are more than one year ahead of schedule]
+[This file was first posted on July 10, 2003]
+
+Edition: 10
+
+Language: English
+
+Character set encoding: ISO-Latin-1
+
+*** START OF THE PROJECT GUTENBERG EBOOK ETHICS ***
+
+Épictète
+https://raw.githubusercontent.com/GITenberg/The-Enchiridion_45109/9cb677e2921022896e68d2f10d7c3a697af6b137/45109-0.txt
+Traduction source : Thomas Wentworth Higginson
+The Project Gutenberg EBook of The Enchiridion, by Epictetus
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.org
+
+
+Title: The Enchiridion
+
+Author: Epictetus
+
+Editor: Arrian
+
+Translator: Thomas Wentworth Higginson
+
+Release Date: March 10, 2014 [EBook #45109]
+
+Language: English
+
+Character set encoding: UTF-8
+
+*** START OF THIS PROJECT GUTENBERG EBOOK THE ENCHIRIDION ***
+
+
+
+
+Produced by Stephen Hutcheson, Chris Curnow and the Online
+Distributed Proofreading Team at http://www.pgdp.net
+
+
+
+
+
+
+
+                      The Library of Liberal Arts
+                     OSKAR PIEST, _General Editor_
+                             [NUMBER EIGHT]
+
+
+Sénèque
+https://raw.githubusercontent.com/GITenberg/L.-Annaeus-Seneca-on-Benefits_3794/110e9bdac66b3152998b90b915205b0e4f923c50/3794.txt
+Traduction source : Aubrey Stewart
+The Project Gutenberg EBook of L. Annaeus Seneca On Benefits, by Seneca
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.org
+
+
+Title: L. Annaeus Seneca On Benefits
+
+Author: Seneca
+
+Editor: Aubrey Stewart
+
+Release Date: February, 2003  [Etext #3794]
+Posting Date: December 3, 2009
+
+Language: English
+
+Character set encoding: ASCII
+
+*** START OF THIS PROJECT GUTENBERG EBOOK L. ANNAEUS SENECA ON BENEFITS ***
+
+
+
+
+Produced by Charles Franks, Robert Rowe and the Online
+Distributed Proofreading Team
+
+
+
+
+
+
+L. ANNAEUS SENECA, ON BENEFITS
+
+By Seneca
+
+Edited by Aubrey Stewart
+
