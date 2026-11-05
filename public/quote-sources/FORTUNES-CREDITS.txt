@@ -1,0 +1,295 @@
+Bibliographic research source: https://deb.debian.org/debian/pool/main/f/fortunes-fr/
+Original collection: http://www.fortunes-fr.org
+
+This package was debianized by Aurelien Jarno <aurel32@debian.org> on
+Wed, 15 May 2002 02:09:21 +0200.
+
+It contains a collection of French fortune cookies, from various sources.
+Here is for each fortune package the individual location and the copyright:
+
+ellisllk (mathematiques, mauriceetpatapon, oulipo, religion, sciences)
+--------
+  * Author:    Nicolas Patrois <nicolas.patrois@online.fr>
+  * Address:   http://ellisllk.lautre.net
+  * Copyright:
+
+  "The quotations included in this package are excerpts from larger works and
+  their reproduction is believed to constitute "fair use". This collection of
+  quotations was created by ellisllk@lautre.net and others and is placed in the
+  public domain. It can be found at http://ellisllk.lautre.net."
+
+  Note: non-french citations are stripped out from the Debian package.
+
+
+fortunes-fr
+-----------
+  * Author: Aurelien Jarno <aurelien@aurel32.net>
+  * Address: ftp://www.fortunes-fr.org
+  * Copyright:
+
+  "The quotations included in this archive are excerpts from larger works
+  and their reproduction is believed to constitute "fair use". This 
+  collection of quotation was created by Aurelien Jarno and other people 
+  (see the AUTHORS file), can be found on http://www.fortunes-fr.org. 
+  Redistribution and use in any forms, are permitted provided that the 
+  following conditions are met:
+  * the name of the authors (file AUTHORS) and the address of the original
+  package shall be included in all copies or substancial portions of the 
+  collection; 
+  * a changelog (file CHANGES) shall be maintain in all copies or 
+  substancial portions of the collection."
+	 
+
+GCU - Le Guide du Cabaliste Usenet
+----------------------------------
+  * Author:    Eric Demeester <edemeester@teaser.fr>
+  * Address:   http://www.usenet-fr.net/~pingouin/
+  * Copyright:
+
+  "The quotations included in this package are excerpts from larger
+  works and their reproduction is believed to constitute "fair use".
+  This collection of quotations was created by Eric Demeester and others
+  in the public domain."
+
+
+GFA - Le Guide du Fmblien Assassin
+-------------------------------
+  * Author:    Thomas Nemeth <tnemeth@free.fr>
+  * Address:   http://tnemeth.free.fr/fmbl/GFA
+  * Copyright:
+
+  "The quotations included in this package are excerpts from larger works and 
+  their reproduction is believed to constitute "fair use". This collection of 
+  quotations was created by Thomas Nemeth and is placed in the public domain."
+
+
+GLP - Le Guide du Linuxien Pervers
+----------------------------------
+  * Author:    Jean Charles Delépine <delepine@nnx.com>
+  * Address:   http://www.usenet-fr.net/~pingouin/
+  * Copyright:
+
+  "The quotations included in this package are excerpts from larger
+  works and their reproduction is believed to constitute "fair use".
+  This collection of quotations was created by Jean Charles Delépine
+  and others in the public domain."
+
+
+GPJ - Le Guide du Petit Joueur
+------------------------------
+  * Author:    Sébastien Delahaye <me@petitjoueur.net>
+  * Address:   http://www.petitjoueur.net/
+  * Copyright:
+
+  "The  quotations included in this package are excerpts from larger works
+  and  their  reproduction  is  believed  to constitute "fair use". This
+  collection  of quotations was created by Sébastien Delahaye and others
+  and is placed in the public domain."
+
+
+La tribune libre de linuxfr
+---------------------------
+  * Author:    Frédéric Jolly <jolly.frederic@fnac.net>
+  * Address:   http://quadaemon.free.fr/tribune.fortune
+  * Copyright: 
+
+  "The quotations included in this package are excerpts from "La tribune
+  libre de linuxfr" (http://linuxfr.org/board) and their reproduction
+  is believed to constitute "fair use". This collection of quotations
+  was created by Frédéric Jolly and others and is placed in the public
+  domain. It can be found at http://quadaemon.free.fr"
+
+
+Les bonnes fortunes de J.R.R. Tolkien
+-------------------------------------
+  * Author:     Valery Beaud <vbeaud@free.fr>
+  * Address:    http://vbeaud.free.fr/Tolkien/Univers/fortune.html
+  * Copyright:
+
+  "Permission is granted to copy, distribute and/or modify this document under
+  the terms of the GNU Free Documentation License, Version 1.1 or any later 
+  version published by the Free Software Foundation; with no Invariant 
+  Sections, with no Front- Cover Texts, and with no Back-Cover Texts."
+ 
+ 
+Les fortunes de Multidesk OS
+----------------------------
+  * Author: Loïc Restoux <lrestoux@free.fr>
+  * Address: http://lordoric.free.fr/fortunes/multidesk
+  * Copyright:
+
+  "The quotations included in this package are excerpts from larger  works
+  and their reproduction  is  believed  to  constitute  "fair  use".  This
+  collection of quotations was created by Loïc Restoux and others  and  is
+  placed in the public domain."
+
+
+Les fortunes de Multidesk OS (2)
+--------------------------------
+  * Author: Alexandre Janon <alex14fr at yahoo.fr>
+  * Address: http://alx14.free.fr/misc/fortunes-mdos.txt
+  * Copyright:
+
+  "The quotations included in  this package are excerpts from larger  works
+  and  their reproduction  is  believed  to  constitute  "fair  use".  This
+  collection of quotations was created by Alexandre Janon and others and is
+  placed in the public domain."
+
+
+#linuxfr@Undernet
+-----------------
+  * Author: Georges Seguin <okki666@nerim.net>
+  * Address: http://okki666.free.fr/linuxfr/fortune.html
+  * Copyright:
+
+  "The quotations included in this package are excerpts from larger works
+  and their reproduction  is  believed  to  constitute  "fair  use".  This
+  collection of quotations was created by Georges Seguin and others and
+  is placed in the public domain."
+
+#debian-fr@freenode
+-------------------
+  * Author: Guillaume Morin <guillaume@morinfr.org>
+  * Address: http://moule.org/fortunes/debian-fr
+  * Copyright:
+
+  "Toutes les fortunes ne sont pas de moi, donc pas moyen de vous dire sous 
+  quelles licenses je vais les distribuer. Dans le doute on va dire que c'est du 
+  domaine public. Si quelqu'un a un problème avec un texte, qu'il me le signale :
+  arachne chez sysif point net."
+
+
+AUTHORS
+Aurelien Jarno <aurelien@aurel32.net>
+
+Un grand merci à Marc Riess qui a réalisé la compilation fortune.fr (domaine 
+public) sur laquelle est basée fortunes-fr. 
+
+Contributeurs :
+
+- Francois Maltey <Francois.Maltey@enst-bretagne.fr>
+	Vérification de nombreuses citations
+	Rédaction des textes sur le Moyen-Âge et le XVIème siècle
+	Déclaration des droits de l'Homme et du citoyen, Gilbert Cesbron 
+	et contributions diverses. 
+	
+- Benoit Friry <benoit@friry.nom.fr>
+	Shadok, Jean Claude Vandamme, fr.rec.photo et contributions diverses
+
+- Cyrille Chepelov <cyrille@chepelov.org>
+	FAI
+
+- Samuel Landau <Samuel.Landau@lip6.fr>
+	GDP/debian-french
+
+CHANGES
+***** Sortie de fortunes-fr 0.01 *****
+09/05/2004  Aurelien Jarno <aurelien@jarno.name>
+	* Ajout du Guide du Debianiste Pervers, citations issues de 
+	  debian-french, debian-devel-french et debian-user-french
+	* Suppression de la ligne vide entre la citation et le nom de
+	  l'auteur, pour éviter les citations trop longues.
+	* Ajout de fr.rec.photo/, contribution de Benoit Friry. 113 citations.
+	* Ajout de haiku/, contribution de Benoit Friry. 16 citations.
+	* Ajout de citations :
+	  - 3 citations d'Alain
+	  - 1 citation de Jean Tardieu
+	  - 1 citation de Jonathan Swift
+	  - 1 citation de Michel Serres
+	  - 3 citations de Platon
+	  - 1 citation d'Henri Michaux
+	  - 2 citation de Galilée
+	  - 1 citation d'Alexandre Dumas
+	  - 4 citations de Ludwig von Wittgenstein
+	  - 6 citations d'Euclide
+	  - 1 citation de Cicéron
+	  - 1 citation de Galois
+	* Ajout d'un test cherchant les lignes ne contenant que des 
+	  espaces.
+	* Contributions de Benoit Friry :
+	  - 31 citations de Philippe Geluck, Le chat
+	  - 3 citations de Terry Pratchett
+	  - 1 citation de Pierre Bordage
+	  - 1 citation de Douglas Adams
+	  - 1 citation de Philip Kindred Dick
+	  - 1 citation de Bernard Werber
+	  - 2 citations d'Amélie Nothomb
+	  - 3 citations d'Henri Cartier-Bresson
+	  - 8 citations de Jacques-Henri Lartigue
+	  - 1 citation de Vladimir Nabokov
+
+08/05/2004  Aurelien Jarno <aurelien@jarno.name>
+	* Contributions de Benoit Friry:
+	  - 1 citation de Pierre Dac
+	  - 1 citation de Voltaire
+	  - 4 citations de Pierre Desproges
+	  - 1 citation de Georges Courteline
+	  - 2 citations de Jules Renard
+	  - 1 citation de Coluche
+	  - 1 citation de Jacques Prévert
+	  - 1 citation de Sénèque
+	  - 3 citations d'Alfred Korzybski
+	  - 1 citation de Georges Perec
+	  - 1 citation de Raymond Queneau
+	  - 1 citation de Sylvie Testud
+	  - 1 citation de Julio Cortázar
+	  - 1 citation de Roland Barthes
+	  - 1 citation de Harry Laus
+	  - 1 citation de Léo Ferré
+
+***** Sortie de fortunes-fr 0.01 *****
+
+03/05/2004  François Maltey <Francois.Maltey@enst-bretagne.fr>
+
+	* Ajout des dates de naissance des auteurs suivants: Gilbert
+	  Cesbron, Alain, Albert Camus, Albert Memmi, Alexandre Dumas,
+	  Alexandre Dumas fils, Alfred de Musset, Alphonse de Lamartine,
+	  Anatole France, André Dhôtel, André Gide, André Malraux,
+	  Antoine de Saint-Exupéry.
+	* Déplacement de antiphane, alexandre_soljenitsyne, aristote et
+	  socrate dans philosophie.
+	* Séparation de littérature en littérature françasie et 
+	  littérature étrangère.
+	* Déplacement de friedrich_nietzsche dans philosophie.
+	* Correction d'un nom de l'auteur apparaissant deux fois dans 
+	  francois_rabelais
+
+16/03/2004  Aurelien Jarno <aurelien@aurel32.net>
+
+	* Écriture des scripts.
+
+16/03/2004  Aurelien Jarno <aurelien@aurel32.net>
+
+	* Création de informatique/fai.
+
+07/03/2004  Aurelien Jarno <aurelien@aurel32.net>
+
+	* Vérification des citations au dictionnaire orthographique.
+
+10/08/2002  François Maltey <Francois.Maltey@enst-bretagne.fr>
+
+	* Vérification des citations de La Fontaine à l'aide du livre de La
+	  Pléiade. 121 citations.
+
+11/07/2002  François Maltey <Francois.Maltey@enst-bretagne.fr>
+
+	* Vérification des citations de Rabelais à l'aide du livre de La
+	  Pléiade. 23 citations.
+
+12/06/2002  François Maltey <Francois.Maltey@enst-bretagne.fr>
+
+	* Vérification des citations de La Rochefoucauld à l'aide du livre de
+	  La Pléiade. 112 citations.
+	* Vérification des citations de Rutebeuf à l'aide du livre de La 
+	  Pléiade. 2 citations.
+	* Vérification des citations de Villon à l'aide du livre de La Pléiade.
+	  6 citations.
+	* Vérification des citations du Romand de Renart à l'aide du livre
+	  de La Pléiade. 1 citation.
+
+03/06/2002  François Maltey <Francois.Maltey@enst-bretagne.fr>
+	* Vérification des citations de Pascal à l'aide du livre de La 
+	  Pléiade. 38 citations.
+
+
+Local changes: Used as a bibliographic index only; selected La Fontaine verse was re-extracted and checked against the pinned primary edition.

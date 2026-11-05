@@ -1,0 +1,47 @@
+{
+  "roche": {
+    "author": "François de La Rochefoucauld",
+    "repository": "https://github.com/GITenberg/R-flexions-ou-sentences-et-maximes-morales_14913",
+    "commit": "4f4faaabba0d13a61dd0f303214c14e367abb398",
+    "file": "14913-8.txt",
+    "encoding": "latin-1",
+    "sha256": "33afdd2e71b8d262396ad1da417a358ef6e0e92f8b438a82851bc6bf38656d33",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/R-flexions-ou-sentences-et-maximes-morales_14913/4f4faaabba0d13a61dd0f303214c14e367abb398/14913-8.txt"
+  },
+  "chamfort": {
+    "author": "Sébastien-Roch Nicolas de Chamfort",
+    "repository": "https://github.com/GITenberg/Oeuvres-Compl-tes-de-Chamfort--Tome-1-5-vie-et-les--crits-de-l-auteur_42377",
+    "commit": "56d3f8d98a175684b19d5dbf329844714b72df9d",
+    "file": "42377-0.txt",
+    "encoding": "utf-8-sig",
+    "sha256": "bdd5489746736ec58300bb29aa84b46a4d694245d6d4c2d0ff01a0e69df799cd",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/Oeuvres-Compl-tes-de-Chamfort--Tome-1-5-vie-et-les--crits-de-l-auteur_42377/56d3f8d98a175684b19d5dbf329844714b72df9d/42377-0.txt"
+  },
+  "bruyere": {
+    "author": "Jean de La Bruyère",
+    "repository": "https://github.com/GITenberg/Les-caract-res_17980",
+    "commit": "6d480e9a37087f554679a27846743659bf21eebe",
+    "file": "17980-8.txt",
+    "encoding": "latin-1",
+    "sha256": "a3cfdc98d02337afa62513e76bc6b9a81ce5a61e041cbcac816f2b99eabcb784",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/Les-caract-res_17980/6d480e9a37087f554679a27846743659bf21eebe/17980-8.txt"
+  },
+  "stael": {
+    "author": "Germaine de Staël",
+    "repository": "https://github.com/GITenberg/De-l-influence-des-passions-sur-le-bonheur-des-individus-et-des-nations_19232",
+    "commit": "5cc498217c49685089870b953869a32f6921f220",
+    "file": "19232-8.txt",
+    "encoding": "latin-1",
+    "sha256": "9ec749e737924c0cdf74f6d4d0fe385a0a9d68ada2e05804e06849595cd63870",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/De-l-influence-des-passions-sur-le-bonheur-des-individus-et-des-nations_19232/5cc498217c49685089870b953869a32f6921f220/19232-8.txt"
+  },
+  "fontaine": {
+    "author": "Jean de La Fontaine",
+    "repository": "https://github.com/GITenberg/Fables_56327",
+    "commit": "f725faef5efa34f76bb74842020877375bb0fb64",
+    "file": "56327-0.txt",
+    "encoding": "utf-8-sig",
+    "sha256": "062e03a6cdf08e3428dede08b130070b7e92043d64e92f017a076d3440eb9410",
+    "downloadUrl": "https://raw.githubusercontent.com/GITenberg/Fables_56327/f725faef5efa34f76bb74842020877375bb0fb64/56327-0.txt"
+  }
+}

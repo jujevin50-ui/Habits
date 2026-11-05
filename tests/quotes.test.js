@@ -4,6 +4,7 @@ import {quotes} from '../server/quote-library.js';
 import {dueQuotes,quoteForDay} from '../server/quotes.js';
 import {quoteSettings,validQuoteSettings,DEFAULT_QUOTE_TIMES} from '../public/quotes-settings.js';
 import {createHandlers} from '../server/notifications.js';
+import {readFileSync} from 'node:fs';
 
 const subscription={endpoint:'https://fcm.googleapis.com/fcm/send/quotes',keys:{p256dh:Buffer.alloc(65,1).toString('base64url'),auth:Buffer.alloc(16,2).toString('base64url')}};
 const enabled={enabled:true,times:[...DEFAULT_QUOTE_TIMES]};
@@ -21,21 +22,36 @@ test('quotes are opt-in and have three valid distinct default hours',()=>{
   for(const value of [{enabled:true,times:['08:00','08:00','21:00']},{enabled:true,times:['08:00','13:00']},{enabled:true,times:['25:00','13:00','21:00']},{enabled:'yes',times:DEFAULT_QUOTE_TIMES}])assert.equal(validQuoteSettings(value),false);
 });
 
-test('library has 360 short unique texts with honest attribution and humanity coverage',()=>{
-  assert.equal(quotes.length,360);assert.equal(new Set(quotes.map(q=>q.text)).size,360);
+test('library has 1,000 attributed classics plus 340 original phrases, with source references',()=>{
+  assert.equal(quotes.length,1340);assert.equal(new Set(quotes.map(q=>q.text)).size,1340);
   assert.equal(quotes.filter(q=>q.author===null).length,340);
-  assert.equal(quotes.filter(q=>q.category==='Humanité').length,40);
-  assert.equal(quotes.filter(q=>q.author).length,20);
-  for(const q of quotes){assert.ok(q.text.length>10&&q.text.length<=120);assert.ok((q.text+(q.author||'')).length<170);if(q.author)assert.ok(q.source);}
+  assert.equal(quotes.filter(q=>q.author===null&&q.category==='Humanité').length,40);
+  assert.equal(quotes.filter(q=>q.author).length,1000);
+  for(const q of quotes){assert.ok(q.text.length>10&&q.text.length<=180);assert.ok((q.text+(q.author||'')).length<240);if(q.author)assert.ok(q.source);}
+});
+
+test('new classics link to frozen source editions and remain textually distinct',()=>{
+  const editions=JSON.parse(readFileSync(new URL('../public/quote-sources/editions.json',import.meta.url),'utf8'));
+  const imported=quotes.filter(q=>q.sourceId);
+  assert.equal(imported.length,980);
+  assert.equal(new Set(quotes.filter(q=>q.author).map(q=>q.author)).size,18);
+  for(const q of imported){
+    const edition=editions[q.sourceId];assert.ok(edition);assert.equal(q.author,edition.author);
+    assert.match(edition.commit,/^[a-f0-9]{40}$/);assert.match(edition.sha256,/^[a-f0-9]{64}$/);
+    assert.ok(q.sourceUrl.startsWith(`${edition.repository}/blob/${edition.commit}/${edition.file}#L`));
+    assert.ok(!/[\u0000-\u001f\u007f-\u009f\ufffd]/.test(q.text));
+  }
+  const normalized=quotes.map(q=>q.text.toLowerCase().replaceAll('œ','oe').normalize('NFKD').replace(/[^a-z0-9]/g,''));
+  assert.equal(new Set(normalized).size,quotes.length);
 });
 
 test('three different daily quotes rotate through the entire library before repeating',()=>{
   const seen=new Set();
-  for(let day=0;day<120;day++)for(let slot=0;slot<3;slot++){
-    const date=new Date(Date.UTC(2026,10,4+day)).toISOString().slice(0,10),quote=quoteForDay(date,slot);
+  for(let day=0;day<Math.ceil(quotes.length/3);day++)for(let slot=0;slot<3;slot++){
+    if(seen.size===quotes.length)break;const date=new Date(Date.UTC(2026,10,4+day)).toISOString().slice(0,10),quote=quoteForDay(date,slot);
     assert.equal(quoteForDay(date,slot),quote);assert.equal(seen.has(quote.text),false);seen.add(quote.text);
   }
-  assert.equal(seen.size,360);
+  assert.equal(seen.size,quotes.length);
 });
 
 test('default and custom schedules respect local winter and summer times',()=>{
