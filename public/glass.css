@@ -198,3 +198,45 @@ body.light .tasks-workspace .task-check input:checked::after{border-color:white}
 .quick-task-expand{display:grid;place-items:center;width:44px;height:44px;min-width:44px;border-radius:14px;color:var(--muted)}
 .quick-task-expand svg{width:20px;height:20px}
 .quick-task-expand[aria-expanded=true]{color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+
+/* Home keeps the daily actions compact; history lives in Statistics. */
+.home-habits,.habit-stats{max-width:860px;margin-inline:auto}
+.home-habit-list{gap:10px}
+.habit-simple{padding:17px 18px;border-radius:24px;box-shadow:none}
+.habit-simple .habit-title h3{font-size:17px;line-height:1.4}
+.habit-simple .habit-title p{font-size:12px;line-height:1.5}
+.habit-simple .habit-icon,.habit-simple .check{width:46px;height:46px;border-radius:16px}
+.habit-simple .habit-icon svg{width:25px;height:25px}
+.home-date{display:flex;align-items:center;gap:10px;margin-top:18px}
+.home-date input{width:auto!important;max-width:210px;min-height:44px;padding:10px 12px!important;font-size:14px}
+.home-date button{min-height:44px;padding:10px 14px;font-size:12px}
+.home-habits .toolbar{margin:16px 0}
+.other-habits{margin-top:18px}
+.other-habits>summary{min-height:48px;padding:14px 3px;color:var(--muted);font-size:13px;cursor:pointer}
+.other-habits>summary span{margin-left:8px;font-variant-numeric:tabular-nums}
+.habit-history-link{display:flex;align-items:center;gap:9px;width:100%;min-height:48px;padding:12px 4px;margin-top:20px;color:var(--muted);font-size:13px;text-align:left}
+.habit-history-link svg{width:18px;height:18px;color:var(--accent)}
+.habit-history-link svg:last-child{margin-left:auto;width:16px}
+.history-views{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:0 0 20px}
+.history-views .views{display:flex;min-height:44px;padding:4px;flex:0 1 300px}
+.history-views .views button{flex:1;min-width:0;min-height:44px;font-size:13px}
+.history-month{margin:0;flex:1 1 180px;max-width:240px}
+.history-month input{min-height:44px;font-size:16px}
+.habit-report{margin-top:16px;border-top:1px solid var(--line)}
+.habit-report>summary{padding:13px 0;min-height:44px;color:var(--muted);font-size:12px;cursor:pointer}
+.habit-report-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.habit-report-metrics>div{min-width:0}
+.habit-report-metrics small{display:block;color:var(--muted);font-size:11px;line-height:1.5}
+.habit-report-metrics strong{display:block;font-size:21px;margin-top:6px;overflow-wrap:anywhere}
+.habit-report .bars{margin-bottom:32px}
+@media(max-width:650px), (pointer:coarse) and (max-width:1000px) and (max-height:500px){
+ .home-habit-list{gap:10px}
+ .habit-simple{padding:15px 13px;border-radius:23px}
+ .habit-simple .habit-head{gap:11px}
+ .habit-simple .habit-title h3{font-size:16px}
+ .home-date{gap:8px}
+ .home-date input{font-size:16px;flex:1;min-width:0;max-width:210px}
+ .history-views .views{flex:1 1 100%}
+ .history-month{max-width:none;flex-basis:100%}
+ .habit-report-metrics strong{font-size:19px}
+}

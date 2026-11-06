@@ -2,6 +2,12 @@
 
 Prototype de PWA personnelle pour les habitudes et les tâches, en français.
 
+## Accueil et statistiques
+
+L’onglet **Accueil** présente les habitudes prévues pour le jour sélectionné sous forme de lignes compactes, avec validation et progression quotidienne. Le choix de date reste visible et un bouton permet de revenir à aujourd’hui. Les habitudes non prévues ce jour sont regroupées sous « Autres habitudes ».
+
+L’ancienne présentation détaillée se trouve dans **Statistiques** : grilles de suivi, vue mensuelle, liste, filtres par catégorie, archives et édition des jours passés. Chaque carte conserve ses séries et ses objectifs ; son volet **Bilan** donne accès au taux de réussite, à la meilleure série et au graphique des validations mensuelles. Le choix d’affichage de l’historique est conservé sans modifier la présentation simplifiée de l’accueil.
+
 ## Tâches
 
 Deux vues : **Échéances**, avec les tâches regroupées par date (retards en premier, tâches sans date en dernier), et **Dossiers**, avec sous-dossiers, sélection directe et balayage horizontal. Les tâches terminées sont repliées et peuvent être rouvertes.
